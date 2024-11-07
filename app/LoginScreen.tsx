@@ -37,7 +37,7 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#2E2E3A" barStyle="light-content" />
+      <StatusBar backgroundColor="#343745" barStyle="light-content" />
       <View style={styles.upperSection} >
       <Image 
           source={require('../assets/images/SigninImg.png')} // Replace with your image path
@@ -69,11 +69,11 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2E2E3A',
+    backgroundColor: '#343745',
   },
   upperSection: {
     flex: 2,
-    backgroundColor: '#2E2E3A',
+    backgroundColor: '#343745',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     justifyContent: 'center',

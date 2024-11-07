@@ -167,7 +167,7 @@ const HomeGroupChatScreen = () => {
     //   </View> */}
 
     <View style={styles.container}>
-      <StatusBar backgroundColor="#2E2E3A" barStyle="light-content" />
+      <StatusBar backgroundColor="#343745" barStyle="light-content" />
       <View style={styles.upperSection}>
         <View style={styles.middleSection}>
         <View style={styles.header}>
@@ -207,8 +207,8 @@ const HomeGroupChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#2E2E3A" },
-  upperSection: { flex: 1, backgroundColor: "#2E2E3A", padding: 20, },
+  container: { flex: 1, backgroundColor: "#343745" },
+  upperSection: { flex: 1, backgroundColor: "#343745", padding: 20, },
   middleSection:{flex:1,justifyContent: 'center',alignItems: 'center', },
   header: {
     width:'100%',
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   },
   membersText: { fontSize: 14, color: "#fff", fontWeight: "bold" },
   chatContent: { flex: 1 },
-  chatName: { fontWeight: "bold", color: "#2E2E3A", fontSize: 18 },
+  chatName: { fontWeight: "bold", color: "#343745", fontSize: 18 },
   chatMessage: { color: "gray", paddingTop: 5 },
   chatTimeContainer: { alignItems: "center", fontSize: 18 },
   chatTime: { color: "gray", fontSize: 12, marginBottom: 5 },
