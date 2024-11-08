@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert,
 import { Ionicons } from '@expo/vector-icons'; // Import the icon library
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { colors } from '@/constants/Colors';
 
 const LoginScreen = () => {
   const [code, setCode] = useState('');
@@ -37,10 +38,11 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#343745" barStyle="light-content" />
+      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.upperSection} >
       <Image 
-          source={require('../assets/images/SigninImg.png')} // Replace with your image path
+          // source={require('../assets/images/SigninImg.png')} 
+          source={require('../assets/images/SigninImg.png')} 
           style={styles.image} 
           resizeMode="cover" // Adjust to 'contain', 'cover', 'stretch', etc. as needed
         />
@@ -69,11 +71,11 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#343745',
+    backgroundColor: colors.background,
   },
   upperSection: {
     flex: 2,
-    backgroundColor: '#343745',
+    backgroundColor: colors.background,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     justifyContent: 'center',

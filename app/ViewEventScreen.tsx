@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { colors } from "@/constants/Colors";
 
 
 const ViewEventScreen = () => {
@@ -21,7 +22,21 @@ const ViewEventScreen = () => {
   const [isGroupOpen, setIsGroupOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const [selectedCategories, setSelectedCategories] = useState([
+    "UI/UX Flow",
+    "Soccer",
+    "Auto-Racing",
+    "App",
+    "Figma",
+    "Designing",
+    "UI/UX Flow",
+    "Soccer",
+    "Auto-Racing",
+    "App",
+    "Figma",
+    "Designing",
+    
+  ]);
   // Sample group names (can be fetched from an API or database)
   const groups = ["Group A", "Group B", "Group C", "Group D"];
 
@@ -41,10 +56,15 @@ const ViewEventScreen = () => {
   };
 
 
-  
+  // const removeCategory = (category) => {
+  //   setSelectedCategories((prev) =>
+  //     prev.filter((item) => item !== category)
+  //   );
+  // };
+
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#343745" barStyle="light-content" />
+      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       
       {/* Fixed Header */}
       <View style={styles.header}>
@@ -59,7 +79,7 @@ const ViewEventScreen = () => {
             <Text style={styles.label}>
               Event Name <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event name" placeholderTextColor="#9AA1A7"/>
+            <TextInput style={styles.input}  placeholder="Enter event name" placeholderTextColor="#9AA1A7" value="xyz event"/>
           </View>
 
           <View>
@@ -119,7 +139,7 @@ const ViewEventScreen = () => {
               Location<Text style={styles.star}>*</Text>
             </Text>
             <View style={styles.inputContainer}>
-              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={styles.input} />
+              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={styles.input} value="Xyz"/>
               <FontAwesome
                 name="map-marker"
                 size={22}
@@ -129,11 +149,28 @@ const ViewEventScreen = () => {
             </View>
           </View>
 
-          <View>
+          {/* <View>
             <Text style={styles.label}>
               Category<Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter category" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={3} />
+            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter category" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} />
+          </View> */}
+
+
+<View>
+            <Text style={styles.label}>
+              Category<Text style={styles.star}>*</Text>
+            </Text>
+            <View style={[styles.input,{flexDirection: "row",flexWrap: "wrap",}]}>
+              {selectedCategories.map((category, index) => (
+                <View key={index} style={styles.categoryTag}>
+                  <Text style={styles.categoryText}>{category}</Text>
+                  {/* <TouchableOpacity onPress={() => removeCategory(category)}>
+                    <FontAwesome name="times" size={16} color="#555" />
+                  </TouchableOpacity> */}
+                </View>
+              ))}
+            </View>
           </View>
 
           <View>
@@ -183,13 +220,13 @@ const ViewEventScreen = () => {
             <Text style={styles.label}>
               Event Cost <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7"/>
+            <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7" value="10$"/>
           </View>
 
             <View>
             <Text style={styles.label}>Add Document</Text>
           <TouchableOpacity style={styles.input}>
-            <Text style={{fontSize:16,color:'#9AA1A7'}}>Document</Text>
+            <Text style={{fontSize:16,color:'#9AA1A7'}}>Document.pdf</Text>
             <FontAwesome
                 name="paperclip"
                 size={22}
@@ -210,6 +247,13 @@ const ViewEventScreen = () => {
             <TextInput style={[styles.input, styles.textBox]}  placeholder="Enter event notes" placeholderTextColor="#9AA1A7" multiline={true} numberOfLines={4}/>
           </View>
 
+          <View>
+            <Text style={styles.label}>
+              Announcement<Text style={styles.star}>*</Text>
+            </Text>
+            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} value="Announcemnet for Today"/>
+          </View>
+
           <TouchableOpacity style={styles.button} >
             <Text style={styles.buttonText}>SAVE</Text>
           </TouchableOpacity>
@@ -224,11 +268,11 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#343745",
+    backgroundColor: colors.background,
   },
   header: {
     height: 250,
-    backgroundColor: "#343745",
+    backgroundColor: colors.background,
     paddingHorizontal: 20,
     justifyContent: "center",
 
@@ -330,6 +374,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FFFFFF',
     fontWeight: 'bold',
+  },
+  // categoryContainer: {
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   marginVertical: 10,
+  //   borderRadius: 10,
+  // },
+  categoryTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#D9E7EC",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  categoryText: {
+    fontSize: 14,
+    color: "#555",
+    marginRight: 5,
   },
 });
 

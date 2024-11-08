@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image,StatusBar } from 'react-native';
-
+import { colors } from '@/constants/Colors';
 const notifications = [
   { id: '1', name: 'Adnan Safi', action: 'Started following you', time: '5 min ago' },
   { id: '2', name: 'Joan Baker', action: 'Invite A virtual Evening of Smooth Jazz', time: '20 min ago' },
@@ -18,9 +18,9 @@ const notifications = [
 const NotificationScreen = () => {
   const renderItem = ({ item }) => (
     <View>
-        <View style={styles.hrContainer}>
+      <View style={styles.hrContainer}>
         <View style={styles.hr} />
-    </View>
+      </View>
     <View style={styles.notificationItem}>
       <Image
         // source={{ uri: 'https://placekitten.com/80/80' }}
@@ -38,7 +38,7 @@ const NotificationScreen = () => {
 
   return (
     <View style={styles.container}>
-        <StatusBar backgroundColor="#343745" barStyle="light-content" />
+        <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.header}>
         <Text style={styles.headerText}>Notifications</Text>
       </View>
@@ -57,12 +57,12 @@ const NotificationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#343745',
+    backgroundColor: colors.background,
 
   },
   header: {
     flex:1,
-    backgroundColor: '#343745',
+    backgroundColor: colors.background,
     padding: 20,
     justifyContent:'center'
   },

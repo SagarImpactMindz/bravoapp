@@ -13,7 +13,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { colors } from "@/constants/Colors";
 
-const AddEventScreen = () => {
+
+const EditEventScreen = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -21,6 +22,21 @@ const AddEventScreen = () => {
   const [isGroupOpen, setIsGroupOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([
+    "UI/UX Flow",
+    "Soccer",
+    "Auto-Racing",
+    "App",
+    "Figma",
+    "Designing",
+    "UI/UX Flow",
+    "Soccer",
+    "Auto-Racing",
+    "App",
+    "Figma",
+    "Designing",
+    
+  ]);
   // Sample group names (can be fetched from an API or database)
   const groups = ["Group A", "Group B", "Group C", "Group D"];
 
@@ -40,14 +56,19 @@ const AddEventScreen = () => {
   };
 
 
-  
+  const removeCategory = (category) => {
+    setSelectedCategories((prev) =>
+      prev.filter((item) => item !== category)
+    );
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       
       {/* Fixed Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Add New Event</Text>
+        <Text style={styles.headerText}>Edit Event</Text>
       </View>
 
       {/* Fixed Form Container */}
@@ -58,7 +79,7 @@ const AddEventScreen = () => {
             <Text style={styles.label}>
               Event Name <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event name" placeholderTextColor="#9AA1A7"/>
+            <TextInput style={styles.input}  placeholder="Enter event name" placeholderTextColor="#9AA1A7" value="xyz event"/>
           </View>
 
           <View>
@@ -118,7 +139,7 @@ const AddEventScreen = () => {
               Location<Text style={styles.star}>*</Text>
             </Text>
             <View style={styles.inputContainer}>
-              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={styles.input} />
+              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={styles.input} value="Xyz"/>
               <FontAwesome
                 name="map-marker"
                 size={22}
@@ -128,11 +149,28 @@ const AddEventScreen = () => {
             </View>
           </View>
 
-          <View>
+          {/* <View>
             <Text style={styles.label}>
               Category<Text style={styles.star}>*</Text>
             </Text>
             <TextInput style={[styles.input, styles.textBox]} placeholder="Enter category" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} />
+          </View> */}
+
+
+<View>
+            <Text style={styles.label}>
+              Category<Text style={styles.star}>*</Text>
+            </Text>
+            <View style={[styles.input,{flexDirection: "row",flexWrap: "wrap",}]}>
+              {selectedCategories.map((category, index) => (
+                <View key={index} style={styles.categoryTag}>
+                  <Text style={styles.categoryText}>{category}</Text>
+                  <TouchableOpacity onPress={() => removeCategory(category)}>
+                    <FontAwesome name="times" size={16} color="#555" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
           </View>
 
           <View>
@@ -182,13 +220,13 @@ const AddEventScreen = () => {
             <Text style={styles.label}>
               Event Cost <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7"/>
+            <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7" value="10$"/>
           </View>
 
             <View>
             <Text style={styles.label}>Add Document</Text>
           <TouchableOpacity style={styles.input}>
-            <Text style={{fontSize:16,color:'#9AA1A7'}}>Document</Text>
+            <Text style={{fontSize:16,color:'#9AA1A7'}}>Document.pdf</Text>
             <FontAwesome
                 name="paperclip"
                 size={22}
@@ -213,7 +251,7 @@ const AddEventScreen = () => {
             <Text style={styles.label}>
               Announcement<Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} />
+            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} value="Announcemnet for Today"/>
           </View>
 
           <TouchableOpacity style={styles.button} >
@@ -337,7 +375,28 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
+  // categoryContainer: {
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   marginVertical: 10,
+  //   borderRadius: 10,
+  // },
+  categoryTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#D9E7EC",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  categoryText: {
+    fontSize: 14,
+    color: "#555",
+    marginRight: 5,
+  },
 });
 
-export default AddEventScreen;
+export default EditEventScreen;
 

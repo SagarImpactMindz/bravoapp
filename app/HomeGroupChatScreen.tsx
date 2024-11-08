@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
+import { colors } from "@/constants/Colors";
 
 const HomeGroupChatScreen = () => {
   const data = [
@@ -167,7 +168,7 @@ const HomeGroupChatScreen = () => {
     //   </View> */}
 
     <View style={styles.container}>
-      <StatusBar backgroundColor="#343745" barStyle="light-content" />
+      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.upperSection}>
         <View style={styles.middleSection}>
         <View style={styles.header}>
@@ -207,8 +208,8 @@ const HomeGroupChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#343745" },
-  upperSection: { flex: 1, backgroundColor: "#343745", padding: 20, },
+  container: { flex: 1, backgroundColor: colors.background },
+  upperSection: { flex: 1, backgroundColor: colors.background, padding: 20, },
   middleSection:{flex:1,justifyContent: 'center',alignItems: 'center', },
   header: {
     width:'100%',
@@ -286,7 +287,7 @@ const styles = StyleSheet.create({
   },
   membersText: { fontSize: 14, color: "#fff", fontWeight: "bold" },
   chatContent: { flex: 1 },
-  chatName: { fontWeight: "bold", color: "#343745", fontSize: 18 },
+  chatName: { fontWeight: "bold", color: colors.background, fontSize: 18 },
   chatMessage: { color: "gray", paddingTop: 5 },
   chatTimeContainer: { alignItems: "center", fontSize: 18 },
   chatTime: { color: "gray", fontSize: 12, marginBottom: 5 },

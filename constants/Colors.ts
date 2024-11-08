@@ -43,3 +43,7 @@ const tintColorDark = '#fff';
 //   inputHeight: 40,
 //   iconSize: 20,
 // };
+
+export const colors={
+    background:'#343745',
+}
