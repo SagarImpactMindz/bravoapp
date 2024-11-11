@@ -89,10 +89,14 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    flex:1,
+    // flex:1,
+    // backgroundColor: colors.background,
+    // padding: 20,
+    // justifyContent:'center'
+    height: 250,
     backgroundColor: colors.background,
-    padding: 20,
-    justifyContent:'center'
+    paddingHorizontal: 20,
+    justifyContent: "center",
   },
   groupprofileSection:{
     flexDirection: 'row',

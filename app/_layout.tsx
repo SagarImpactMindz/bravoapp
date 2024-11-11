@@ -24,6 +24,9 @@
 //   );
 // }
 
+
+// main
+
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
@@ -31,9 +34,10 @@ export default function RootLayout() {
     <Stack>
       {/* Use the path to load your tabs after the login screen */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="LoginScreen" options={{ headerShown: false }} /> */}
       {/* This will load the Tabs navigation when logged in */}
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }
+

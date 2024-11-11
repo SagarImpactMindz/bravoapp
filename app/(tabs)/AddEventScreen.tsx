@@ -8,6 +8,8 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -42,6 +44,10 @@ const AddEventScreen = () => {
 
   
   return (
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       
@@ -222,6 +228,7 @@ const AddEventScreen = () => {
         </ScrollView>
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 

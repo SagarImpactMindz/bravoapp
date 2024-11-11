@@ -15,30 +15,30 @@
 // }
 
 // main
-import { Text, View } from "react-native";
-import LoginScreen from "./LoginScreen";
-import HomeGroupChatScreen from "./HomeGroupChatScreen";
-import NotificationScreen from "./NotificationScreen";
-import AddEventScreen from "./AddEventScreen";
-import ViewEventScreen from "./ViewEventScreen";
-import EditEventScreen from "./EditEventScreen";
-import MyProfileScreen from "./MyProfileScreen";
-import CalendarScreen from "./CalendarScreen";
-import GroupMembersScreen from "./GroupMembersScreen";
+// import { Text, View } from "react-native";
+// import LoginScreen from "./LoginScreen";
+// import HomeGroupChatScreen from "./(tabs)/HomeGroupChatScreen";
+// import NotificationScreen from "./(tabs)/NotificationScreen";
+// import AddEventScreen from "./(tabs)/AddEventScreen";
+// import ViewEventScreen from "./ViewEventScreen";
+// import EditEventScreen from "./EditEventScreen";
+// import MyProfileScreen from "./(tabs)/MyProfileScreen";
+// import CalendarScreen from "./(tabs)/CalendarScreen";
+// import GroupMembersScreen from "./GroupMembersScreen";
 
-export default function Index() {
-  return (
-    <LoginScreen/>
-    // <HomeGroupChatScreen/>
-    // <NotificationScreen/>
-    // <AddEventScreen/>
-    // <ViewEventScreen/>
-    // <EditEventScreen/>
-    // <MyProfileScreen/>
-    // <CalendarScreen/>
-    // <GroupMembersScreen/>
-  );
-}
+// export default function Index() {
+//   return (
+//     <LoginScreen/>
+//     // <HomeGroupChatScreen/>
+//     // <NotificationScreen/>
+//     // <AddEventScreen/>
+//     // <ViewEventScreen/>
+//     // <EditEventScreen/>
+//     // <MyProfileScreen/>
+//     // <CalendarScreen/>
+//     // <GroupMembersScreen/>
+//   );
+// }
 
 // import { Text, View } from "react-native";
 // import TabLayout from "./(tabs)/_layout";
@@ -54,3 +54,20 @@ export default function Index() {
 //     </View>
 //   );
 // }
+
+
+import { Redirect } from "expo-router";
+import LoginScreen from "./LoginScreen";
+import ChatScreen from "./ChatScreen";
+import HomeGroupChatScreen from "./(tabs)/HomeGroupChatScreen";
+import GroupMembersScreen from "./GroupMembersScreen";
+import NotificationScreen from "./(tabs)/NotificationScreen";
+
+export default function Index() {
+  return (
+    // <LoginScreen/>
+    <ChatScreen/>
+    // <GroupMembersScreen/>
+    // <NotificationScreen/>
+  );
+}

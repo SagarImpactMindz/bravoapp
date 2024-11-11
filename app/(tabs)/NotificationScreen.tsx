@@ -10,9 +10,9 @@ const notifications = [
   { id: '5', name: 'Clara Tolson', action: 'Join your Event Gala Music Festival', time: '9 hr ago' },
   { id: '6', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
   { id: '7', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
-  { id: '7', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
-  { id: '7', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
-  { id: '7', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
+  { id: '8', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
+  { id: '9', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
+  { id: '10', name: 'Jennifer Fritz', action: 'Invite you International Kids Safe', time: 'Tue , 5:10 pm' },
 ];
 
 const NotificationScreen = () => {
@@ -24,7 +24,7 @@ const NotificationScreen = () => {
     <View style={styles.notificationItem}>
       <Image
         // source={{ uri: 'https://placekitten.com/80/80' }}
-        source={require("../assets/images/SigninImg.png")}
+        source={require("../../assets/images/SigninImg.png")}
         style={styles.avatar}
       />
       <View style={styles.textContainer}>
@@ -61,10 +61,14 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    flex:1,
+    // flex:1,
+    // backgroundColor: colors.background,
+    // padding: 20,
+    // justifyContent:'center'
+    height: 250,
     backgroundColor: colors.background,
-    padding: 20,
-    justifyContent:'center'
+    paddingHorizontal: 20,
+    justifyContent: "center",
   },
   headerText: {
     color: '#FFFFFF',

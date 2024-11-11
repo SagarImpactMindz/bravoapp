@@ -23,7 +23,7 @@ const MyProfileScreen = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {/* <View style={styles.container}> */}
+      <View style={styles.container}>
         <StatusBar backgroundColor={colors.background} barStyle="light-content" />
         
         {/* Fixed Header */}
@@ -37,7 +37,7 @@ const MyProfileScreen = () => {
           <View style={styles.profileSection}>
             <View style={styles.profilePicWrapper}>
               <Image
-                source={require("../assets/images/SigninImg.png")}
+                source={require("../../assets/images/SigninImg.png")}
                 style={styles.profilePic}
               />
               <TouchableOpacity style={styles.profilePicEditIconContainer}>
@@ -95,7 +95,7 @@ const MyProfileScreen = () => {
           </ScrollView>
           </View>
         
-      {/* </View> */}
+      </View>
       </KeyboardAvoidingView>
     );
   }
@@ -106,10 +106,14 @@ const MyProfileScreen = () => {
       backgroundColor: colors.background,
     },
     header: {
+      // backgroundColor: colors.background,
+      // paddingHorizontal: 20,
+      // justifyContent: "center",
+      // flex: 1,
+      height: 250,
       backgroundColor: colors.background,
       paddingHorizontal: 20,
       justifyContent: "center",
-      flex: 1,
     },
     headerText: {
       color: "#FFFFFF",

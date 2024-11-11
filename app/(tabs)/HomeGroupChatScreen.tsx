@@ -124,7 +124,7 @@ const HomeGroupChatScreen = () => {
         <View style={styles.avatar}>
           {/* <Image source={{ uri: item.image }} style={styles.groupPic}/> */}
           <Image
-            source={require("../assets/images/SigninImg.png")}
+            source={require("../../assets/images/SigninImg.png")}
             style={styles.groupPic}
           />
           {item.members ? (

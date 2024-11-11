@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, StatusBar, KeyboardAvoidingView,Platform } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -61,7 +61,11 @@ const CalendarScreen = () => {
       setSelectedDate(day.dateString); // Update the selected date
     };
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
+    {/* <View style={styles.container}> */}
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.calendarContainer}>
       <Calendar
@@ -116,7 +120,8 @@ const CalendarScreen = () => {
       <TouchableOpacity style={styles.fab}>
         <Ionicons name="add" size={24} color="#FFF" />
       </TouchableOpacity>
-    </View>
+    {/* </View> */}
+    </KeyboardAvoidingView>
   );
 };
 
