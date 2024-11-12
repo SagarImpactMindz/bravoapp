@@ -211,7 +211,6 @@ export default function TabLayout() {
   // Function to handle tab press
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
-    // textOpacity.setValue(0); // Reset opacity before starting animation
   };
 
   return (

@@ -8,12 +8,16 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
+// import { useNavigation } from '@react-navigation/native';
 
 const HomeGroupChatScreen = () => {
+  // const navigation = useNavigation(); 
   const data = [
     {
       id: "1",
@@ -119,7 +123,7 @@ const HomeGroupChatScreen = () => {
   ];
 
   const renderItem = ({ item }) => (
-    <View>
+    <View >
       <View style={styles.chatItem}>
         <View style={styles.avatar}>
           {/* <Image source={{ uri: item.image }} style={styles.groupPic}/> */}
@@ -159,14 +163,10 @@ const HomeGroupChatScreen = () => {
   );
 
   return (
-    //   {/* <View style={styles.footer}>
-    //   <FontAwesome name="calendar" size={24} color="gray" />
-    //     <FontAwesome name="plus-circle" size={24} color="gray" />
-    //     <FontAwesome name="users" size={24} color="gray" />
-    //     <FontAwesome name="bell" size={24} color="gray" />
-    //     <Text style={styles.messageText}>Message</Text>
-    //   </View> */}
-
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.upperSection}>
@@ -201,15 +201,17 @@ const HomeGroupChatScreen = () => {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           style={styles.chatList}
+          
         />
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  upperSection: { flex: 1, backgroundColor: colors.background, padding: 20, },
+  upperSection: { height:250, backgroundColor: colors.background, padding: 20, },
   middleSection:{flex:1,justifyContent: 'center',alignItems: 'center', },
   header: {
     width:'100%',
@@ -217,6 +219,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
+    marginTop:20
   },
   welcomeText: { color: "#fff", fontSize: 22 },
   addButton: { backgroundColor: "#4E4E6A", borderRadius: 20, padding: 8 },
@@ -238,6 +241,8 @@ const styles = StyleSheet.create({
     flex: 3,
     backgroundColor: "white",
     padding: 10,
+    paddingTop:8,
+    paddingBottom:0,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },

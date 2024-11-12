@@ -2,6 +2,7 @@ import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, StatusBar, Dime
 import React, { useState } from 'react';
 import { colors } from '@/constants/Colors';
 import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import ChatInfoComponent from '@/components/bravao/ChatInfoComponent';
 
 const groupMembers = [
   { id: '1', name: 'Adnan Safi', image: "" },
@@ -39,7 +40,8 @@ const messagesData = [
 
 const ChatScreen = () => {
   const [message, setMessage] = useState('');
-
+  const [showChatInfo,setShowChatInfo]=useState(false)
+  const [isChatInfoVisible, setChatInfoVisible] = useState(false);
   const renderMessage = ({ item }) => {
     // If it's an event message, render it differently
     if (item.type === 'event') {
@@ -60,8 +62,7 @@ const ChatScreen = () => {
     }
 
 return item.messages.map((message, index) => (
-    <View key={index} 
-        >
+    <View key={index} >
         <View style={[{flexDirection:'row',alignItems:'center' },item.type === 'sent' ? {    alignSelf: 'flex-end',} : {alignSelf: 'flex-start'},,]}>
             {item.type === 'received'  &&( index === item.messages.length - 1) ? 
             <View >
@@ -116,7 +117,7 @@ return (
               {groupMembers.map((member) => member.name).join(', ')}
             </Text>
           </View>
-          <TouchableOpacity
+          <TouchableOpacity onPress={()=>setShowChatInfo(true)}
             style={{
               alignContent: 'center',
               justifyContent: 'center',
@@ -158,9 +159,8 @@ return (
     <FontAwesome name="send" size={20} color="#7F888F" />
   </TouchableOpacity>
 </View>
-
-
       </View>
+      {showChatInfo && <ChatInfoComponent/>}
     </KeyboardAvoidingView>
   );
 };
