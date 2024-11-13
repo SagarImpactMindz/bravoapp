@@ -14,10 +14,12 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeGroupChatScreen = () => {
-  // const navigation = useNavigation(); 
+  const navigation = useNavigation(); 
+  const role='teacher'
+    // const role='student'
   const data = [
     {
       id: "1",
@@ -123,7 +125,7 @@ const HomeGroupChatScreen = () => {
   ];
 
   const renderItem = ({ item }) => (
-    <View >
+    <TouchableOpacity onPress={()=>navigation.navigate('ChatScreen')} >
       <View style={styles.chatItem}>
         <View style={styles.avatar}>
           {/* <Image source={{ uri: item.image }} style={styles.groupPic}/> */}
@@ -159,52 +161,65 @@ const HomeGroupChatScreen = () => {
       <View style={styles.hrContainer}>
         <View style={styles.hr} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <KeyboardAvoidingView
-    style={styles.container}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-  >
-    <View style={styles.container}>
-      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
-      <View style={styles.upperSection}>
-        <View style={styles.middleSection}>
-        <View style={styles.header}>
-            <View>
-          <Text style={styles.welcomeText}>Welcome , Jaini</Text></View>
-          <TouchableOpacity style={styles.addButton}>
-            <FontAwesome name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            placeholder="Search ..."
-            style={styles.searchInput}
-            placeholderTextColor="#fff"
-          />
-          <TouchableOpacity style={styles.searchBtn}>
-            <FontAwesome
-              name="search"
-              size={24}
-              color="#fff"
-              style={styles.searchIcon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      </View>
-      <View style={styles.chatSection}>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          style={styles.chatList}
-          
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.container}>
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle="light-content"
         />
+        <View style={styles.upperSection}>
+          <View style={styles.middleSection}>
+            <View style={styles.header}>
+              <View>
+                <Text style={styles.welcomeText}>Welcome , Jaini</Text>
+              </View>
+              {/* <TouchableOpacity style={styles.addButton} onPress={()=>navigation.navigate('StudentsList')}> */}
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => {
+                  if (role === "teacher") {
+                    navigation.navigate("TeacherList");
+                  } else {
+                    navigation.navigate("StudentsList");
+                  }
+                }}
+              >
+                <FontAwesome name="plus" size={20} color="#fff" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.searchContainer}>
+              <TextInput
+                placeholder="Search ..."
+                style={styles.searchInput}
+                placeholderTextColor="#fff"
+              />
+              <TouchableOpacity style={styles.searchBtn}>
+                <FontAwesome
+                  name="search"
+                  size={24}
+                  color="#fff"
+                  style={styles.searchIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={styles.chatSection}>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            style={styles.chatList}
+          />
+        </View>
       </View>
-    </View>
     </KeyboardAvoidingView>
   );
 };
@@ -222,7 +237,7 @@ const styles = StyleSheet.create({
     marginTop:20
   },
   welcomeText: { color: "#fff", fontSize: 22 },
-  addButton: { backgroundColor: "#4E4E6A", borderRadius: 20, padding: 8 },
+  addButton: {width:36,height:36, backgroundColor: "#4E4E6A", borderRadius: 18,justifyContent:'center',alignItems:'center', padding: 8 },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",

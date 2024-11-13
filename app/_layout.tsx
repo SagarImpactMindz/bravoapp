@@ -37,6 +37,13 @@ export default function RootLayout() {
       {/* <Stack.Screen name="LoginScreen" options={{ headerShown: false }} /> */}
       {/* This will load the Tabs navigation when logged in */}
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="ChatScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="StudentsList" options={{ headerShown: false }} />
+      <Stack.Screen name="TeacherList" options={{ headerShown: false }} />
+      <Stack.Screen name="UserProfile" options={{ headerShown: false }} />
+      <Stack.Screen name="ViewEventScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="EditEventScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="GroupMembers" options={{ headerShown: false }} />
     </Stack>
   );
 }

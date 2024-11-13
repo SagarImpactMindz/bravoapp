@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,22 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { colors } from "@/constants/Colors";
-
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import * as DocumentPicker from 'expo-document-picker';
 
 const EditEventScreen = () => {
+  const navigation=useNavigation()
+  // const route = useRoute();
+  // // console.log(route)
+  // const { setShowEdit } = route.params;
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -62,13 +71,72 @@ const EditEventScreen = () => {
     );
   };
 
+  // useEffect(() => {
+  //   if (setShowEdit) {
+  //     setShowEdit(false);
+  //   }
+  // }, [setShowEdit]);
+
+  const handleSave=()=>{
+    Alert.alert("Event Updated Successfully")
+    navigation.navigate('CalendarScreen')
+  }
+
+  const uploadFileOnPressHandler = async () => {
+    try {
+      // Open document picker with PDF filter
+      const documentResult = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf', // Restrict to only PDF files
+      });
+
+      if (documentResult.canceled === true) {
+        console.log('User canceled file picker');
+        // Alert.alert('User canceled file picker')
+        Alert.alert('Please Select your document')
+        return;
+      }
+
+      // Extract file details
+      console.log(documentResult,"documentResult")
+      const fileUri = documentResult.assets[0].uri;
+      const fileName = documentResult.assets[0].name;
+
+      if (fileUri) {
+        console.log('Selected file URI:', fileUri);
+        console.log('Selected file name:', fileName);
+        Alert.alert("you Selected :",fileName)
+
+        // Set the selected file
+        setSelectedFile({ uri: fileUri, name: fileName });
+
+        // Upload the file to the backend
+        // await uploadFileToBackend(fileUri, fileName);
+      }else{
+        setSelectedFile(null);
+      }
+    } catch (err) {
+      console.error('Error picking file', err);
+      Alert.alert('Error', 'There was an issue selecting the PDF');
+    }
+  };
+
+
   return (
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       
       {/* Fixed Header */}
       <View style={styles.header}>
+      <View style={{flexDirection:'row',alignItems:'center'}}>
+        <TouchableOpacity style={styles.backIconContainer} onPress={()=>navigation.goBack()}>
+            <FontAwesome5 name="angle-left" size={30} color="#fff" />
+          </TouchableOpacity>
         <Text style={styles.headerText}>Edit Event</Text>
+        </View>
       </View>
 
       {/* Fixed Form Container */}
@@ -223,7 +291,7 @@ const EditEventScreen = () => {
             <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7" value="10$"/>
           </View>
 
-            <View>
+            {/* <View>
             <Text style={styles.label}>Add Document</Text>
           <TouchableOpacity style={styles.input}>
             <Text style={{fontSize:16,color:'#9AA1A7'}}>Document.pdf</Text>
@@ -235,8 +303,20 @@ const EditEventScreen = () => {
               />
             
           </TouchableOpacity>
+            </View>  */}
+            <View>
+            <Text style={styles.label}>Add Document</Text>
+          <TouchableOpacity style={styles.input} onPress={uploadFileOnPressHandler}>
+            <Text style={{fontSize:16,color:'#9AA1A7'}}>{selectedFile ? selectedFile.name :"Document.pdf"}</Text>
+            <FontAwesome
+                name="paperclip"
+                size={22}
+                color="#555"
+                style={styles.icon}
+              />
+            
+          </TouchableOpacity>
             </View> 
-
 
 
 
@@ -254,12 +334,13 @@ const EditEventScreen = () => {
             <TextInput style={[styles.input, styles.textBox]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} value="Announcemnet for Today"/>
           </View>
 
-          <TouchableOpacity style={styles.button} >
+          <TouchableOpacity style={styles.button} onPress={handleSave} >
             <Text style={styles.buttonText}>SAVE</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -277,10 +358,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
   },
+  backIconContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 1,
+    paddingHorizontal: 8,
+    borderColor: '#9AA1A7',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginRight: 5,
+  },
   headerText: {
     color: "#FFFFFF",
     fontSize: 28,
     fontWeight: "bold",
+    marginLeft:10
   },
   addEventForm: {
     flex: 1,

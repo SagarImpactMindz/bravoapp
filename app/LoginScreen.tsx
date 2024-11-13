@@ -195,6 +195,7 @@ const LoginScreen = () => {
           value={code}
           onChangeText={setCode}
           placeholder="Enter your code"
+          placeholderTextColor="#9AA1A7"
           keyboardType="phone-pad"
         />
         <TouchableOpacity style={styles.button} onPress={handleSignIn}>

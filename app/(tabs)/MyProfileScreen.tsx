@@ -110,6 +110,8 @@ const MyProfileScreen = () => {
           {showAbout && <About setShowAbout={setShowAbout}/>}
 
           {showPrivacy && <Privacy setShowPrivacy={setShowPrivacy}/> }
+
+
       </View>
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

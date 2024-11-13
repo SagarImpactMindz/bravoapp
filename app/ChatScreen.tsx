@@ -1,8 +1,10 @@
-import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, StatusBar, Dimensions, Image, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, StatusBar, Dimensions, Image, TouchableOpacity, TextInput, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import { colors } from '@/constants/Colors';
 import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import ChatInfoComponent from '@/components/bravao/ChatInfoComponent';
+import { useNavigation } from '@react-navigation/native';
+import ChatOptions from '@/components/bravao/ChatOptions';
 
 const groupMembers = [
   { id: '1', name: 'Adnan Safi', image: "" },
@@ -41,7 +43,8 @@ const messagesData = [
 const ChatScreen = () => {
   const [message, setMessage] = useState('');
   const [showChatInfo,setShowChatInfo]=useState(false)
-  const [isChatInfoVisible, setChatInfoVisible] = useState(false);
+  const[showChatOptions,setShowChatOptions]=useState(false)
+  const navigation = useNavigation(); 
   const renderMessage = ({ item }) => {
     // If it's an event message, render it differently
     if (item.type === 'event') {
@@ -96,20 +99,22 @@ return (
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.header}>
         <View style={styles.groupprofileSection}>
-          <TouchableOpacity style={styles.backIconContainer}>
+          <TouchableOpacity style={styles.backIconContainer} onPress={()=>navigation.goBack()}>
             <FontAwesome5 name="angle-left" size={30} color="#fff" />
           </TouchableOpacity>
+          
           <View style={styles.groupProfilePicWrapper}>
             <Image
               source={require('../assets/images/SigninImg.png')}
               style={styles.groupProfilePic}
             />
-            <View style={styles.groupProfilePicEditIconContainer}>
+            <TouchableOpacity style={styles.groupProfilePicEditIconContainer} onPress={()=>navigation.navigate('GroupMembers')}>
               <Text>{groupMembers.length > 9 ? '9+' : groupMembers.length}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={{ marginLeft: 8 }}>
             <Text style={styles.groupName}>Class 10 A</Text>
@@ -141,8 +146,8 @@ return (
 
 <View style={styles.inputContainer}>
   {/* Plus icon inside input box */}
-  <TouchableOpacity style={styles.iconLeft}>
-    <FontAwesome name="plus" size={16} color="#fff" />
+  <TouchableOpacity style={styles.iconLeft} >
+    <FontAwesome name="plus" size={16} color="#fff" onPress={()=>setShowChatOptions(true)}/>
   </TouchableOpacity>
 
   {/* Message input */}
@@ -160,7 +165,9 @@ return (
   </TouchableOpacity>
 </View>
       </View>
-      {showChatInfo && <ChatInfoComponent/>}
+      {showChatInfo && <ChatInfoComponent  visible={showChatInfo} onClose={() => setShowChatInfo(false)}/>}
+      {showChatOptions && <ChatOptions setShowChatOptions={setShowChatOptions}/>}
+
     </KeyboardAvoidingView>
   );
 };

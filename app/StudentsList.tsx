@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image,StatusBar, TouchableOpacity, Dimensions } from 'react-native';
 import { colors } from '@/constants/Colors';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import ChangePhotoComponent from '@/components/bravao/ChangePhotoComponent';
 const groupMembers = [
   { id: '1', name: 'Adnan Safi', image:"" },
   { id: '2', name: 'Joan Baker xcwegbuidcewb',  image:"" },
@@ -19,11 +21,12 @@ const groupMembers = [
   { id: '14', name: 'Jennifer Fritz', image:""  },
 ];
 
-const GroupMembersScreen = () => {
-
+const StudentList = () => {
+  const [changeProfile,setChangeProfile]=useState(false)
+  const navigation = useNavigation(); 
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={()=>navigation.navigate('UserProfile')}>
         
     <View style={styles.notificationItem}>
       <Image
@@ -48,35 +51,50 @@ const GroupMembersScreen = () => {
 
   return (
     <View style={styles.container}>
-        <StatusBar backgroundColor={colors.background} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.header}>
-         <View style={styles.groupprofileSection}>
-         <View style={styles.groupProfilePicWrapper}>
-    <Image
-      source={require("../assets/images/SigninImg.png")}
-      style={styles.groupProfilePic}
-    />
-    <TouchableOpacity style={styles.groupProfilePicEditIconContainer}>
-      <FontAwesome5 name="pen" size={15} color="white" />
-    </TouchableOpacity>
-  </View>
-  <View style={{marginLeft:8}}>
-  <Text style={styles.groupName}>Class 10 A</Text>
-  <Text style={styles.groupMembers} numberOfLines={1} ellipsizeMode="tail">
-  {groupMembers.map((member) => member.name).join(', ')}
-  </Text>
-  </View>
-  
+        <View style={styles.groupprofileSection}>
+          <TouchableOpacity
+            style={styles.backIconContainer}
+            onPress={() => navigation.goBack()}
+          >
+            <FontAwesome5 name="angle-left" size={30} color="#fff" />
+          </TouchableOpacity>
+          <View style={styles.groupProfilePicWrapper}>
+            <Image
+              source={require("../assets/images/SigninImg.png")}
+              style={styles.groupProfilePic}
+            />
+            <TouchableOpacity
+              style={styles.groupProfilePicEditIconContainer}
+              onPress={() => setChangeProfile(true)}
+            >
+              <FontAwesome5 name="pen" size={15} color="white" />
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginLeft: 8 }}>
+            <Text style={styles.groupName}>Class 10 A</Text>
+            <Text
+              style={styles.groupMembers}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {groupMembers.map((member) => member.name).join(", ")}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={styles.notificationContainer}>
-      <FlatList
-        data={groupMembers}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+        <FlatList
+          data={groupMembers}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+        />
       </View>
+      {changeProfile && (
+        <ChangePhotoComponent setChangeProfile={setChangeProfile} />
+      )}
     </View>
   );
 };
@@ -104,11 +122,22 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingVertical:10
   },
+  backIconContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 1,
+    paddingHorizontal: 8,
+    borderColor: '#9AA1A7',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginRight: 5,
+  },
   groupProfilePicWrapper:{
     width: 70,
     height: 70,
     borderRadius: 35,
     position: 'relative',
+    marginLeft:10
   },
   groupProfilePic:{
     width: "100%",
@@ -192,4 +221,4 @@ const styles = StyleSheet.create({
   hr: { borderBottomColor: "#ccc", borderBottomWidth: 1, width: "100%",    },
 });
 
-export default GroupMembersScreen;
+export default StudentList;

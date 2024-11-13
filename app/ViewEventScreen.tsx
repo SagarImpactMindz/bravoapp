@@ -8,13 +8,18 @@ import {
   Dimensions,
   ScrollView,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { colors } from "@/constants/Colors";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 
 const ViewEventScreen = () => {
+  const navigation=useNavigation()
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -63,12 +68,21 @@ const ViewEventScreen = () => {
   // };
 
   return (
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       
       {/* Fixed Header */}
       <View style={styles.header}>
+        <View style={{flexDirection:'row',alignItems:'center'}}>
+        <TouchableOpacity style={styles.backIconContainer} onPress={()=>navigation.goBack()}>
+            <FontAwesome5 name="angle-left" size={30} color="#fff" />
+          </TouchableOpacity>
         <Text style={styles.headerText}>View Event</Text>
+        </View>
       </View>
 
       {/* Fixed Form Container */}
@@ -79,7 +93,7 @@ const ViewEventScreen = () => {
             <Text style={styles.label}>
               Event Name <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event name" placeholderTextColor="#9AA1A7" value="xyz event"/>
+            <TextInput style={[styles.input, { color: 'black' }]}  placeholder="Enter event name" placeholderTextColor="#9AA1A7" value="xyz event" selectTextOnFocus={false} editable={false}/>
           </View>
 
           <View>
@@ -98,14 +112,14 @@ const ViewEventScreen = () => {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            {showStartPicker && (
+            {/* {showStartPicker && (
               <DateTimePickerModal
                 isVisible={showStartPicker}
                 mode="datetime"
                 onConfirm={handleConfirm}
                 onCancel={() => setShowStartPicker(false)}
               />
-            )}
+            )} */}
           </View>
 
           <View>
@@ -124,14 +138,14 @@ const ViewEventScreen = () => {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            {showEndPicker && (
+            {/* {showEndPicker && (
               <DateTimePickerModal
                 isVisible={showEndPicker}
                 mode="datetime"
                 onConfirm={handleConfirm}
                 onCancel={() => setShowEndPicker(false)}
               />
-            )}
+            )} */}
           </View>
 
           <View>
@@ -139,7 +153,7 @@ const ViewEventScreen = () => {
               Location<Text style={styles.star}>*</Text>
             </Text>
             <View style={styles.inputContainer}>
-              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={styles.input} value="Xyz"/>
+              <TextInput placeholder="Enter location" placeholderTextColor="#9AA1A7" style={[styles.input, { color: 'black' }]} value="Xyz" selectTextOnFocus={false} editable={false}/>
               <FontAwesome
                 name="map-marker"
                 size={22}
@@ -220,13 +234,13 @@ const ViewEventScreen = () => {
             <Text style={styles.label}>
               Event Cost <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={styles.input}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7" value="10$"/>
+            <TextInput style={[styles.input, { color: 'black' }]}  placeholder="Enter event cost" placeholderTextColor="#9AA1A7" value="10$" selectTextOnFocus={false} editable={false}/>
           </View>
 
             <View>
             <Text style={styles.label}>Add Document</Text>
           <TouchableOpacity style={styles.input}>
-            <Text style={{fontSize:16,color:'#9AA1A7'}}>Document.pdf</Text>
+            <Text style={{fontSize:16,color:'#000'}}>Document.pdf</Text>
             <FontAwesome
                 name="paperclip"
                 size={22}
@@ -244,22 +258,23 @@ const ViewEventScreen = () => {
             <Text style={styles.label}>
               Event Notes <Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={[styles.input, styles.textBox]}  placeholder="Enter event notes" placeholderTextColor="#9AA1A7" multiline={true} numberOfLines={4}/>
+            <TextInput style={[styles.input, styles.textBox, { color: 'black' }]}  placeholder="Enter event notes" placeholderTextColor="#9AA1A7" multiline={true} numberOfLines={4} value="helkli" selectTextOnFocus={false} editable={false}/>
           </View>
 
           <View>
             <Text style={styles.label}>
               Announcement<Text style={styles.star}>*</Text>
             </Text>
-            <TextInput style={[styles.input, styles.textBox]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} value="Announcemnet for Today"/>
+            <TextInput style={[styles.input, styles.textBox,, { color: 'black' }]} placeholder="Enter announcement" placeholderTextColor="#9AA1A7"  multiline={true} numberOfLines={4} value="Announcemnet for Today" selectTextOnFocus={false} editable={false} />
           </View>
 
-          <TouchableOpacity style={styles.button} >
+          {/* <TouchableOpacity style={styles.button} >
             <Text style={styles.buttonText}>SAVE</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -277,10 +292,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
   },
+  backIconContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 1,
+    paddingHorizontal: 8,
+    borderColor: '#9AA1A7',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginRight: 5,
+  },
   headerText: {
     color: "#FFFFFF",
     fontSize: 28,
     fontWeight: "bold",
+    marginLeft:10
   },
   addEventForm: {
     flex: 1,

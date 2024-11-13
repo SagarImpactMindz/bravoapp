@@ -5,8 +5,16 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors } from '@/constants/Colors';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import EditDeleteEventComponent from '@/components/bravao/EditDeleteEventComponent';
+import DeleteComponent from '@/components/bravao/DeleteComponent';
 
 const CalendarScreen = () => {
+  const navigation = useNavigation(); 
+  // const role="student"
+  const role="teacher"
+  const[showEdit,setShowEdit]=useState(false)
+  const[showDeletePopUp,setShowDeletePopUp]=useState(false)
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
@@ -92,7 +100,7 @@ const CalendarScreen = () => {
         <ScrollView contentContainerStyle={styles.eventsList}>
           {events.map((event) => (
             <View key={event.id} style={styles.eventCard}>
-              <View style={styles.eventInfo}>
+              <TouchableOpacity style={styles.eventInfo} onPress={()=>navigation.navigate('ViewEventScreen')}>
                 <View style={{flexDirection:'row'}}>
                 <Text style={styles.eventDate}>{event.date}</Text>
                 <Text style={styles.eventTime}>{event.time}</Text>
@@ -101,26 +109,36 @@ const CalendarScreen = () => {
                 {event.cost && <Text style={styles.eventCost}>Event Cost: {event.cost}</Text>}
                 <Text style={styles.eventCreator}>Created By: {event.creator}</Text>
                 
-              </View>
-              <View style={styles.eventActions}>
-                {/* <FontAwesome name="envelope" size={20} color="#4E4E6A" style={styles.eventIcon} /> */}
-                {/* <FontAwesome name="comments" size={20} color="#4E4E6A" style={styles.eventIcon} /> */}
-                <TouchableOpacity >
+              </TouchableOpacity>
+              {/* <View style={styles.eventActions}> */}
+                { role === "teacher" ?(
+                  <View style={styles.eventActions}>
+                  <TouchableOpacity onPress={()=>navigation.navigate('ChatScreen')} >
                 <FontAwesome name="comment" size={20} color="#4E4E6A" style={styles.eventIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity >
-                <FontAwesome name="ellipsis-h" size={20} color="#4E4E6A" style={styles.eventIcon} />
+                <TouchableOpacity onPress={()=>setShowEdit(true)}>
+                  <FontAwesome name="ellipsis-h" size={20} color="#4E4E6A" style={styles.eventIcon} />
+                  </TouchableOpacity>
+                  </View>
+                ):(
+                  <View style={styles.eventActions}>
+                  <TouchableOpacity onPress={()=>navigation.navigate('ChatScreen')}>
+                <FontAwesome name="comment" size={20} color="#4E4E6A" style={styles.eventIcon} />
                 </TouchableOpacity>
-              </View>
+                </View>
+                )}
+              {/* </View> */}
             </View>
           ))}
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity style={styles.fab} onPress={()=>navigation.navigate('AddEventScreen')}>
         <Ionicons name="add" size={24} color="#FFF" />
       </TouchableOpacity>
     {/* </View> */}
+    {showEdit && <EditDeleteEventComponent visible={showEdit} setShowEdit={setShowEdit} setShowDeletePopUp={setShowDeletePopUp}/>}
+    {showDeletePopUp && <DeleteComponent visible={showDeletePopUp} setShowDeletePopUp={setShowDeletePopUp}/>}
     </KeyboardAvoidingView>
   );
 };

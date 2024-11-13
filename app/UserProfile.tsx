@@ -17,110 +17,149 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from "@/constants/Colors";
+import { useNavigation } from "@react-navigation/native";
 const UserProfile = () => {
+  const navigation = useNavigation(); 
     return (
       <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.container}>
-        <StatusBar backgroundColor={colors.background} barStyle="light-content" />
-        
-        {/* Fixed Header */}
-        <View style={styles.header}>
-        <View style={styles.profileSection}>
-            <TouchableOpacity>
-                <FontAwesome name="chevron-left" size={24} color="white" />
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.container}>
+          <StatusBar
+            backgroundColor={colors.background}
+            barStyle="light-content"
+          />
+
+          {/* Fixed Header */}
+          <View style={styles.header}>
+            <View style={styles.profileSection}>
+              <TouchableOpacity
+                style={styles.backIconContainer}
+                onPress={() => navigation.goBack()}
+              >
+                <FontAwesome5 name="angle-left" size={30} color="#fff" />
               </TouchableOpacity>
-            <View style={styles.profilePicWrapper}>
-              <Image
-                source={require("../assets/images/SigninImg.png")}
-                style={styles.profilePic}
-              />
+              <View style={styles.profilePicWrapper}>
+                <Image
+                  source={require("../assets/images/SigninImg.png")}
+                  style={styles.profilePic}
+                />
+              </View>
+              <Text style={styles.userName}>Janni Shah</Text>
             </View>
-            <Text style={styles.userName}>Janni Shah</Text>
+          </View>
+
+          <View style={styles.myProfileContainer}>
+            <ScrollView>
+              <View style={styles.userDetailsContainer}>
+                <View>
+                  <Text style={styles.studentDetailsHeading}>
+                    Student Details
+                  </Text>
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Name</Text>
+                  <TextInput style={styles.userDetailsInput} value="Jani" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Surname</Text>
+                  <TextInput style={styles.userDetailsInput} value="Shah" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Email</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="janishah@gmail.com"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Contact No</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="1234567890"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Group</Text>
+                  <TextInput style={styles.userDetailsInput} value="10th B" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Address</Text>
+                  <TextInput style={styles.userDetailsInput} value="home xyz" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>City</Text>
+                  <TextInput style={styles.userDetailsInput} value="LA" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Postal Code</Text>
+                  <TextInput style={styles.userDetailsInput} value="16002" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>State</Text>
+                  <TextInput style={styles.userDetailsInput} value="Malburn" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Country</Text>
+                  <TextInput style={styles.userDetailsInput} value="USA" />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Notes</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value=""
+                    placeholder="Add Text Here"
+                    placeholderTextColor="#626D75"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.menuContainer}>
+                <View>
+                  <Text style={styles.studentDetailsHeading}>
+                    Relatives Parties
+                  </Text>
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Related 1</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="Darrell Steward"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Email</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="darrellshah@gmail.com"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Contact No</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="1234567890"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Mother Name</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="Priyanka Shah"
+                  />
+                </View>
+                <View style={styles.userDetails}>
+                  <Text style={styles.userDetailsHeading}>Contact No</Text>
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value="1234567890"
+                  />
+                </View>
+              </View>
+            </ScrollView>
           </View>
         </View>
-  
-        
-        <View style={styles.myProfileContainer}>
-        <ScrollView>
-          <View style={styles.userDetailsContainer}>
-          <View><Text style={styles.studentDetailsHeading}>Student Details</Text></View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Name</Text>
-                    <TextInput style={styles.userDetailsInput} value="Jani" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Surname</Text>
-                    <TextInput style={styles.userDetailsInput} value="Shah" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Email</Text>
-                    <TextInput style={styles.userDetailsInput} value="janishah@gmail.com" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Contact No</Text>
-                    <TextInput style={styles.userDetailsInput} value="1234567890" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Group</Text>
-                    <TextInput style={styles.userDetailsInput} value="10th B" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Address</Text>
-                    <TextInput style={styles.userDetailsInput} value="home xyz" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>City</Text>
-                    <TextInput style={styles.userDetailsInput} value="LA" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Postal Code</Text>
-                    <TextInput style={styles.userDetailsInput} value="16002"/>
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>State</Text>
-                    <TextInput style={styles.userDetailsInput} value="Malburn"/>
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Country</Text>
-                    <TextInput style={styles.userDetailsInput} value="USA"/>
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Notes</Text>
-                    <TextInput style={styles.userDetailsInput} value="" placeholder="Add Text Here" placeholderTextColor="#626D75"/>
-                </View>
-          </View>
-
-          <View style={styles.menuContainer}>
-          <View><Text style={styles.studentDetailsHeading}>Relatives Parties</Text></View>
-          <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Related 1</Text>
-                    <TextInput style={styles.userDetailsInput} value="Darrell Steward" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Email</Text>
-                    <TextInput style={styles.userDetailsInput} value="darrellshah@gmail.com" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Contact No</Text>
-                    <TextInput style={styles.userDetailsInput} value="1234567890" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Mother Name</Text>
-                    <TextInput style={styles.userDetailsInput} value="Priyanka Shah" />
-                </View>
-                <View style={styles.userDetails}>
-                    <Text style={styles.userDetailsHeading}>Contact No</Text>
-                    <TextInput style={styles.userDetailsInput} value="1234567890" />
-                </View>
-
-          </View>
-          </ScrollView>
-          </View>
-
-      </View>
       </KeyboardAvoidingView>
     );
   }
@@ -145,6 +184,16 @@ const UserProfile = () => {
         alignItems: 'center',
         padding: 2,
         paddingVertical:10
+      },
+      backIconContainer: {
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingVertical: 1,
+        paddingHorizontal: 8,
+        borderColor: '#9AA1A7',
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginRight: 5,
       },
       profilePicWrapper: {
         width: 60,

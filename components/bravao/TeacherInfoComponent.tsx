@@ -13,12 +13,15 @@ import {
 
 const { height } = Dimensions.get('window');
 
-const ChatInfoComponent = ({ visible, onClose }) => {
+const TeacherInfoComponent = ({ visible, onClose }) => {
   const navigation=useNavigation()
   const handleOptionPress=(option)=>{
+
     switch(option){
-      case 'Contact info':
-        return navigation.navigate('UserProfile')
+      case 'Teacher List':
+        return navigation.navigate('TeacherList')
+      case 'Student List':
+        return navigation.navigate('StudentsList')
     }
   }
   return (
@@ -35,14 +38,10 @@ const ChatInfoComponent = ({ visible, onClose }) => {
           <View style={styles.dragIndicator} />
           <ScrollView contentContainerStyle={styles.optionsContainer}>
             {[
-              'Contact info',
-              'Select message',
-              'Block',
-              'Mute notification',
-              'Clear chat',
-              'Report',
-              'Close chat',
-              'Delete chat',
+              'Teacher List',
+              'Student List',
+              'Edit',
+              'Delete',
             ].map((option, index) => (
               <TouchableOpacity key={index} style={styles.option} onPress={()=>{handleOptionPress(option),onClose()}}>
                 <Text style={styles.optionText}>{option}</Text>
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    height: height * 0.5,
+    height: height * 0.4,
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
@@ -107,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatInfoComponent;
+export default TeacherInfoComponent;
