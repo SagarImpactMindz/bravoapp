@@ -142,7 +142,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router'; // Import useRouter from expo-router
-import { loginApi } from './utils/Services/authServices';
+import {loginApi} from '../utils/Services/authServices'
 
 const LoginScreen = () => {
   const [code, setCode] = useState('');
