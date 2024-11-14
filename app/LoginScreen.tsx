@@ -142,32 +142,49 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router'; // Import useRouter from expo-router
+import { loginApi } from './utils/Services/authServices';
 
 const LoginScreen = () => {
   const [code, setCode] = useState('');
   const router = useRouter(); // Initialize the router
 
   // Handle sign in and navigate to the Home tab
+  // const handleSignIn = async () => {
+  //   try {
+  //     // Uncomment and modify the following code to enable login functionality
+  //     const response = await fetch('https://impactmindz.in/client/artie/bravo/ci_back_end/api/auth', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ auth_code: code }), // Send auth code as JSON
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (data.isSuccess) {
+  //       // Store the token and user info in AsyncStorage
+  //       await AsyncStorage.setItem('userToken', data.token);
+  //       await AsyncStorage.setItem('userInfo', JSON.stringify(data.user_info));
+  //       Alert.alert('Login Successful', data.message);
+        
+  //       // Navigate to the tabs screen after successful login
+  //       router.push('/(tabs)/HomeGroupChatScreen');
+  //     } else {
+  //       Alert.alert('Login Failed', data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during login:', error);
+  //     Alert.alert('An error occurred. Please try again.');
+  //   }
+  // };
   const handleSignIn = async () => {
     try {
-      // Uncomment and modify the following code to enable login functionality
-      const response = await fetch('https://impactmindz.in/client/artie/bravo/ci_back_end/api/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ auth_code: code }), // Send auth code as JSON
-      });
-
-      const data = await response.json();
-
+      const data = await loginApi(code);
       if (data.isSuccess) {
-        // Store the token and user info in AsyncStorage
         await AsyncStorage.setItem('userToken', data.token);
         await AsyncStorage.setItem('userInfo', JSON.stringify(data.user_info));
         Alert.alert('Login Successful', data.message);
-        
-        // Navigate to the tabs screen after successful login
         router.push('/(tabs)/HomeGroupChatScreen');
       } else {
         Alert.alert('Login Failed', data.message);

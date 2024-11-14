@@ -5,6 +5,7 @@ import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import ChatInfoComponent from '@/components/bravao/ChatInfoComponent';
 import { useNavigation } from '@react-navigation/native';
 import ChatOptions from '@/components/bravao/ChatOptions';
+import LocationOptions from '@/components/bravao/LocationOptions';
 
 const groupMembers = [
   { id: '1', name: 'Adnan Safi', image: "" },
@@ -146,8 +147,8 @@ return (
 
 <View style={styles.inputContainer}>
   {/* Plus icon inside input box */}
-  <TouchableOpacity style={styles.iconLeft} >
-    <FontAwesome name="plus" size={16} color="#fff" onPress={()=>setShowChatOptions(true)}/>
+  <TouchableOpacity style={styles.iconLeft} onPress={()=>setShowChatOptions(true)} >
+    <FontAwesome name="plus" size={16} color="#fff" />
   </TouchableOpacity>
 
   {/* Message input */}
@@ -166,8 +167,7 @@ return (
 </View>
       </View>
       {showChatInfo && <ChatInfoComponent  visible={showChatInfo} onClose={() => setShowChatInfo(false)}/>}
-      {showChatOptions && <ChatOptions setShowChatOptions={setShowChatOptions}/>}
-
+      {showChatOptions && <ChatOptions visible={showChatOptions} onClose={() => setShowChatOptions(false)} />}
     </KeyboardAvoidingView>
   );
 };

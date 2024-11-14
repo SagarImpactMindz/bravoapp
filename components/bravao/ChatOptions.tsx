@@ -127,7 +127,6 @@
 // });
 
 // export default ChatOptions;
-
 import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
@@ -136,49 +135,54 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   Modal,
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 
 const { height } = Dimensions.get('window');
 
-const ChatOptions = ({ visible, setShowChatOptions }) => {
+const ChatOptions = ({ visible, onClose }) => {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Alert.alert("Permission to access the media library is required!");
-      return;
-    }
-
+  // Function to pick multiple images
+  const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsMultipleSelection: true, // Enable multiple selection
       quality: 1,
-      multiple: true, // Allow selecting multiple images
     });
-    console.log(result,"result")
-    if (!result.cancelled && result.uri) {
-        setSelectedImages((prevImages) => [...prevImages, result.uri]);
-      } else {
-        Alert.alert("No image selected");
-      }
+
+    if (!result.canceled) {
+      setSelectedImages(result.selected);
+    }
   };
 
-  const renderSelectedImages = () => {
-    return selectedImages.map((image, index) => (
-    //   <Image
-    //     key={index}
-    //     source={{ uri: image[index].uri }}
-    //     style={styles.selectedImage}
-    //   />
-    console.log(image[index],"image")
-    
-    ));
+  // Function to pick a single image
+  const pickSingleImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false, // Disable multiple selection
+      quality: 1,
+    });
+   
+    if (!result.canceled) {
+      setSelectedImages([result]);
+    }
+  };
+
+  // Function to pick a document
+  const pickDocument = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: '*/*', // Allows all types of documents
+    });
+    console.log(result,"result")
+    if (result.type !== 'cancel') {
+      setSelectedDocuments((prevDocs) => [...prevDocs, result]);
+    }
   };
 
   return (
@@ -186,56 +190,63 @@ const ChatOptions = ({ visible, setShowChatOptions }) => {
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={() => setShowChatOptions(false)}
+      onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={() => setShowChatOptions(false)}>
+      <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           <View
             style={styles.container}
             onStartShouldSetResponder={(e) => e.stopPropagation()} // Prevent click propagation inside the modal content
           >
             <View style={styles.grid}>
-              {/* Camera Option */}
               <TouchableOpacity
                 style={styles.option}
-              >
-                <FontAwesome name="camera" size={30} color="#333" />
-                <Text style={styles.optionText}>Camera</Text>
-              </TouchableOpacity>
-
-              {/* Image Option */}
-              <TouchableOpacity
-                style={styles.option}
-                onPress={pickImage}
+                onPress={pickImages} // Select a single image
               >
                 <FontAwesome name="image" size={30} color="#333" />
                 <Text style={styles.optionText}>Image</Text>
               </TouchableOpacity>
 
-              {/* Document Option */}
+              {/* <TouchableOpacity
+                style={styles.option}
+                onPress={pickImages} // Select multiple images
+              >
+                <FontAwesome name="image" size={30} color="#333" />
+                <Text style={styles.optionText}>Multiple Images</Text>
+              </TouchableOpacity> */}
+
               <TouchableOpacity
                 style={styles.option}
+                onPress={pickDocument} // Select a document
               >
                 <FontAwesome name="file" size={30} color="#333" />
                 <Text style={styles.optionText}>Document</Text>
               </TouchableOpacity>
-
-              {/* Location Option */}
-              <TouchableOpacity
-                style={styles.option}
-              >
-                <FontAwesome name="location-arrow" size={30} color="#333" />
-                <Text style={styles.optionText}>Location</Text>
-              </TouchableOpacity>
             </View>
 
-            {/* Render selected images */}
             {selectedImages.length > 0 && (
               <View style={styles.selectedImagesContainer}>
                 <Text style={styles.selectedImagesText}>Selected Images:</Text>
                 <View style={styles.imagesGrid}>
-                  {renderSelectedImages()}
+                  {selectedImages.map((image, index) => (
+                    <Image
+                      key={index}
+                      source={{ uri: image.uri }}
+                      style={styles.selectedImage}
+                    />
+                  ))}
                 </View>
+              </View>
+            )}
+
+            {selectedDocuments.length > 0 && (
+              <View style={styles.selectedImagesContainer}>
+                <Text style={styles.selectedImagesText}>Selected Documents:</Text>
+                {selectedDocuments.map((doc, index) => (
+                  <Text key={index} style={styles.selectedImagesText}>
+                    {doc.name}
+                  </Text>
+                ))}
               </View>
             )}
           </View>
@@ -255,14 +266,15 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 20,
+    // borderRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     padding: 20,
     paddingVertical: 30,
     maxHeight: height * 0.7,
   },
   grid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 10,
@@ -311,108 +323,72 @@ const styles = StyleSheet.create({
 export default ChatOptions;
 
 
-
-
-
+// import { FontAwesome } from '@expo/vector-icons';
 // import React, { useState } from 'react';
 // import {
 //   View,
 //   Text,
+//   Image,
 //   TouchableOpacity,
 //   StyleSheet,
 //   Modal,
 //   Dimensions,
 //   TouchableWithoutFeedback,
-//   Alert,
 // } from 'react-native';
-// import { FontAwesome } from '@expo/vector-icons';
 // import * as ImagePicker from 'expo-image-picker';
 // import * as DocumentPicker from 'expo-document-picker';
-// import * as Location from 'expo-location';
-// import { Camera } from 'expo-camera';
 
 // const { height } = Dimensions.get('window');
 
-// const ChatOptions = ({ visible, setShowChatOptions }) => {
-//   const [hasPermission, setHasPermission] = useState(null);
-//   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+// const ChatOptions = ({ visible, onClose }) => {
+//   const [selectedImages, setSelectedImages] = useState([]);
+//   const [selectedDocuments, setSelectedDocuments] = useState([]);
 
-//   const handleOptionPress = async (option) => {
-//     switch (option) {
-//       case 'Camera':
-//         await openCamera();
-//         break;
-//       case 'Image':
-//         await selectImage();
-//         break;
-//       case 'Document':
-//         await selectDocument();
-//         break;
-//       case 'Location':
-//         await sendLocation();
-//         break;
-//       default:
-//         console.log('Invalid option');
-//     }
-//     setShowChatOptions(false); // Close the options after an action
-//   };
-
-//   const openCamera = async () => {
-//     const { status } = await Camera.requestCameraPermissionsAsync();
-//     if (status === 'granted') {
-//       const result = await ImagePicker.launchCameraAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//         cameraType,
-//       });
-//       if (!result.cancelled) {
-//         console.log('Camera result:', result.uri);
-//         Alert.alert('Camera Result', `Image taken at ${result.uri}`);
-//       }
-//     } else {
-//       Alert.alert('Camera Permission', 'Camera permission is required.');
-//     }
-//   };
-
-//   const selectImage = async () => {
-//     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-//     if (status === 'granted') {
-//       const result = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//         allowsEditing: true,
-//       });
-//       if (!result.cancelled) {
-//         console.log('Image selected:', result.uri);
-//         Alert.alert('Image Selected', `Image path: ${result.uri}`);
-//       }
-//     } else {
-//       Alert.alert('Image Permission', 'Permission to access the image library is required.');
-//     }
-//   };
-
-//   const selectDocument = async () => {
-//     const result = await DocumentPicker.getDocumentAsync({
-//       type: '*/*', // Can specify document types here
+//   // Function to pick multiple images
+//   const pickImages = async () => {
+//     const result = await ImagePicker.launchImageLibraryAsync({
+//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//       allowsMultipleSelection: true,
+//       quality: 1,
 //     });
-//     if (result.type === 'success') {
-//       console.log('Document selected:', result.uri);
-//       Alert.alert('Document Selected', `Document path: ${result.uri}`);
-//     } else {
-//       Alert.alert('Document Selection', 'No document selected or operation was canceled.');
+
+//     if (!result.canceled) {
+//       setSelectedImages(result.selected);
 //     }
 //   };
 
-//   const sendLocation = async () => {
-//     let { status } = await Location.requestForegroundPermissionsAsync();
-//     if (status === 'granted') {
-//       const location = await Location.getCurrentPositionAsync({});
-//       console.log('Location:', location.coords);
-//       Alert.alert(
-//         'Current Location',
-//         `Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`
-//       );
-//     } else {
-//       Alert.alert('Location Permission', 'Location permission is required.');
+//   // Function to pick a single image
+//   const pickSingleImage = async () => {
+//     const result = await ImagePicker.launchImageLibraryAsync({
+//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//       allowsMultipleSelection: false,
+//       quality: 1,
+//     });
+   
+//     if (!result.canceled) {
+//       setSelectedImages([result]);
 //     }
+//   };
+
+//   // Function to pick a document
+//   const pickDocument = async () => {
+//     const result = await DocumentPicker.getDocumentAsync({
+//       type: '*/*',
+//     });
+//     console.log(result,"result")
+//     if (result.type !== 'cancel') {
+//       setSelectedDocuments((prevDocs) => [...prevDocs, result]);
+//     }
+//   };
+
+//   // Function to handle sending files
+//   const handleSend = () => {
+//     // Logic to handle sending selected images and documents
+//     console.log('Sending files:', selectedImages, selectedDocuments);
+//     // Clear selections after sending
+//     setSelectedImages([]);
+//     setSelectedDocuments([]);
+//     onClose(); // Close modal after sending
 //   };
 
 //   return (
@@ -420,51 +396,63 @@ export default ChatOptions;
 //       animationType="slide"
 //       transparent={true}
 //       visible={visible}
-//       onRequestClose={() => setShowChatOptions(false)}
+//       onRequestClose={onClose}
 //     >
-//       <TouchableWithoutFeedback onPress={() => setShowChatOptions(false)}>
+//       <TouchableWithoutFeedback onPress={onClose}>
 //         <View style={styles.overlay}>
 //           <View
 //             style={styles.container}
-//             onStartShouldSetResponder={(e) => e.stopPropagation()} // Prevent click propagation inside the modal content
+//             onStartShouldSetResponder={(e) => e.stopPropagation()}
 //           >
 //             <View style={styles.grid}>
-//               {/* Camera Option */}
 //               <TouchableOpacity
 //                 style={styles.option}
-//                 onPress={() => handleOptionPress('Camera')}
-//               >
-//                 <FontAwesome name="camera" size={30} color="#333" />
-//                 <Text style={styles.optionText}>Camera</Text>
-//               </TouchableOpacity>
-
-//               {/* Image Option */}
-//               <TouchableOpacity
-//                 style={styles.option}
-//                 onPress={() => handleOptionPress('Image')}
+//                 onPress={pickSingleImage}
 //               >
 //                 <FontAwesome name="image" size={30} color="#333" />
 //                 <Text style={styles.optionText}>Image</Text>
 //               </TouchableOpacity>
 
-//               {/* Document Option */}
 //               <TouchableOpacity
 //                 style={styles.option}
-//                 onPress={() => handleOptionPress('Document')}
+//                 onPress={pickDocument}
 //               >
 //                 <FontAwesome name="file" size={30} color="#333" />
 //                 <Text style={styles.optionText}>Document</Text>
 //               </TouchableOpacity>
-
-//               {/* Location Option */}
-//               <TouchableOpacity
-//                 style={styles.option}
-//                 onPress={() => handleOptionPress('Location')}
-//               >
-//                 <FontAwesome name="location-arrow" size={30} color="#333" />
-//                 <Text style={styles.optionText}>Location</Text>
-//               </TouchableOpacity>
 //             </View>
+
+//             {selectedImages.length > 0 && (
+//               <View style={styles.selectedImagesContainer}>
+//                 <Text style={styles.selectedImagesText}>Selected Images:</Text>
+//                 <View style={styles.imagesGrid}>
+//                   {selectedImages.map((image, index) => (
+//                     <Image
+//                       key={index}
+//                       source={{ uri: image.uri }}
+//                       style={styles.selectedImage}
+//                     />
+//                   ))}
+//                 </View>
+//               </View>
+//             )}
+
+//             {selectedDocuments.length > 0 && (
+//               <View style={styles.selectedImagesContainer}>
+//                 <Text style={styles.selectedImagesText}>Selected Documents:</Text>
+//                 {selectedDocuments.map((doc, index) => (
+//                   <Text key={index} style={styles.selectedImagesText}>
+//                     {doc.name}
+//                   </Text>
+//                 ))}
+//               </View>
+//             )}
+
+//             {(selectedImages.length > 0 || selectedDocuments.length > 0) && (
+//               <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+//                 <Text style={styles.sendButtonText}>Send</Text>
+//               </TouchableOpacity>
+//             )}
 //           </View>
 //         </View>
 //       </TouchableWithoutFeedback>
@@ -476,19 +464,19 @@ export default ChatOptions;
 //   overlay: {
 //     flex: 1,
 //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//     justifyContent: 'center',
+//     justifyContent: 'flex-end',
 //     alignItems: 'center',
 //   },
 //   container: {
-//     width: '80%',
+//     width: '100%',
 //     backgroundColor: '#fff',
 //     borderRadius: 20,
 //     padding: 20,
+//     paddingVertical: 30,
 //     maxHeight: height * 0.7,
 //   },
 //   grid: {
 //     flexDirection: 'row',
-//     flexWrap: 'wrap',
 //     justifyContent: 'space-around',
 //     alignItems: 'center',
 //     marginTop: 10,
@@ -507,6 +495,43 @@ export default ChatOptions;
 //     marginTop: 5,
 //     fontSize: 14,
 //     color: '#333',
+//   },
+//   selectedImagesContainer: {
+//     marginTop: 20,
+//     borderTopWidth: 1,
+//     borderTopColor: '#E0E0E0',
+//     paddingTop: 10,
+//   },
+//   selectedImagesText: {
+//     fontSize: 16,
+//     color: '#333',
+//     marginBottom: 10,
+//   },
+//   imagesGrid: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     justifyContent: 'space-evenly',
+//   },
+//   selectedImage: {
+//     width: 80,
+//     height: 80,
+//     margin: 5,
+//     borderRadius: 8,
+//     borderWidth: 1,
+//     borderColor: '#E0E0E0',
+//   },
+//   sendButton: {
+//     backgroundColor: '#4CAF50',
+//     paddingVertical: 12,
+//     paddingHorizontal: 25,
+//     borderRadius: 8,
+//     alignSelf: 'center',
+//     marginTop: 20,
+//   },
+//   sendButtonText: {
+//     color: '#fff',
+//     fontSize: 16,
+//     fontWeight: 'bold',
 //   },
 // });
 
