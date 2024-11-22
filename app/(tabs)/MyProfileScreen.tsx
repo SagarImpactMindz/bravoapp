@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -22,10 +24,75 @@ import { colors } from "@/constants/Colors";
 import ChangePhotoComponent from "@/components/bravao/ChangePhotoComponent";
 import About from "@/components/bravao/About";
 import Privacy from "@/components/bravao/Privacy";
+import { useAuth } from "@/app/contexts/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usersDetails } from "@/utils/Services/services";
+import ViewProfilePicComponent from "@/components/bravao/ViewProfilePicComponent"
+
 const MyProfileScreen = () => {
   const [changeProfile,setChangeProfile]=useState(false)
   const [showAbout,setShowAbout]=useState(false)
   const [showPrivacy,setShowPrivacy]=useState(false)
+  const[userData,setUserData]=useState()
+  const[isLoading,setIsLoading]=useState(false)
+  const[viewProfilePic,setViewProfilePic]=useState(false)
+  const { logoutUser,setIsAuthenticated } = useAuth();
+  
+  const handleLogout = () => {
+    logoutUser();
+    setIsAuthenticated(false) 
+    Alert.alert("Logout Successfully");
+  };
+// get data from api
+useEffect(() => {
+  (async () => {
+    setIsLoading(true);
+    try {
+      const data = await usersDetails();
+      setUserData(data?.userInfo);
+    } catch (error) {
+      // console.error(error);
+      Alert.alert("Login Failed", error.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  })();
+}, []);
+
+// const fetchUserData=async()=>{
+//   setIsLoading(true);
+//   try {
+//     const data = await usersDetails();
+//     setUserData(data?.userInfo);
+//   } catch (error) {
+//     // console.error(error);
+//     Alert.alert("Login Failed", error.response.data.message);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// }
+// useEffect(()=>{
+//   fetchUserData()
+// },[])
+
+const updateProfilePic = (newProfilePic) => {
+  setUserData((prevUserData) => ({
+    ...prevUserData,
+    profile_picture: newProfilePic,
+  }));
+};
+
+
+if (isLoading) {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color={"#fff"} />
+      <Text style={styles.loadingText}>Loading...</Text>
+    </View>
+  );
+}
+
+const userProfilePic=userData?.profile_picture
 
     return (
       <KeyboardAvoidingView
@@ -45,37 +112,42 @@ const MyProfileScreen = () => {
         <View style={styles.myProfileContainer}>
         <ScrollView >
           <View style={styles.profileSection}>
-            <View style={styles.profilePicWrapper}>
+            <TouchableOpacity style={styles.profilePicWrapper} onPress={()=>setViewProfilePic(true)}>
               <Image
-                source={require("../../assets/images/SigninImg.png")}
-                style={styles.profilePic}
-              />
+                  source={
+                    userData?.profile_picture
+                      ? { uri: userData?.profile_picture }
+                      : require("../../assets/images/placeholder-user.jpg")
+                  }
+                  style={styles.profilePic}
+                />
               <TouchableOpacity style={styles.profilePicEditIconContainer} onPress={()=>setChangeProfile(true)}>
                 <FontAwesome5 name="pen" size={15} color="white" />
               </TouchableOpacity>
-            </View>
-            <Text style={styles.userName}>Janni Shah</Text>
+            </TouchableOpacity>
+            <Text style={styles.userName}>{userData?.fullname ? userData.fullname:"null"}</Text>
           </View>
           <View style={styles.userDetailsContainer}>
                 <View style={styles.userDetails}>
                     <Text style={styles.userDetailsHeading}>Email</Text>
-                    <TextInput style={styles.userDetailsInput} value="janishah@gmail.com" />
+                    <TextInput style={styles.userDetailsInput}  value={userData?.email ? userData.email : "null"} />
                 </View>
                 <View style={styles.userDetails}>
                     <Text style={styles.userDetailsHeading}>Contact No</Text>
-                    <TextInput style={styles.userDetailsInput} value="1234567890" />
+                    <TextInput style={styles.userDetailsInput} value={userData?.phone ? userData.phone :'null'} />
                 </View>
                 <View style={styles.userDetails}>
                     <Text style={styles.userDetailsHeading}>Address</Text>
-                    <TextInput style={styles.userDetailsInput} value="home xyz" />
+                    <TextInput style={styles.userDetailsInput} value={userData?.address ? userData.address :'null'} />
                 </View>
                 <View style={styles.userDetails}>
                     <Text style={styles.userDetailsHeading}>Role</Text>
-                    <TextInput style={styles.userDetailsInput} value="Student"/>
+                    <TextInput style={styles.userDetailsInput} value={userData?.role ? userData.role :'null'}/>
                 </View>
                 <View style={styles.userDetails}>
                     <Text style={styles.userDetailsHeading}>Authentication Code</Text>
-                    <TextInput style={styles.userDetailsInput} value="818564"/>
+                    {/* <TextInput style={styles.userDetailsInput} value={userData?.authrization_code} editable={false}/> */}
+                    <TextInput style={styles.userDetailsInput} value={userData?.authrization_code ? userData.authrization_code :'null'}/>
                 </View>
           </View>
           <View style={styles.menuContainer}>
@@ -93,7 +165,7 @@ const MyProfileScreen = () => {
           <Text style={styles.menuText}>Privacy Policy</Text>
           <FontAwesome5 name="angle-double-right" size={24} color="#3C4E56" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
             <View style={styles.menuIconWrapper}>
           <FontAwesome name="sign-out" size={24} color="#3C4E56" style={styles.menuIcon}/>
           </View>
@@ -105,11 +177,16 @@ const MyProfileScreen = () => {
           </ScrollView>
           </View>
        
-          {changeProfile &&   <ChangePhotoComponent setChangeProfile={setChangeProfile} />}
-
+          {/* {changeProfile &&   <ChangePhotoComponent visible={changeProfile} setChangeProfile={setChangeProfile} userProfilePic={userProfilePic} updateProfilePic={updateProfilePic} setViewProfilePic={setViewProfilePic}/>}
+          {viewProfilePic && <ViewProfilePicComponent visible={viewProfilePic} setViewProfilePic={setViewProfilePic} userProfilePic={userProfilePic}/>}
           {showAbout && <About setShowAbout={setShowAbout}/>}
 
-          {showPrivacy && <Privacy setShowPrivacy={setShowPrivacy}/> }
+          {showPrivacy && <Privacy setShowPrivacy={setShowPrivacy}/> } */}
+          <ChangePhotoComponent visible={changeProfile} onClose={()=>setChangeProfile(false)}  userProfilePic={userProfilePic} updateProfilePic={updateProfilePic} setViewProfilePic={setViewProfilePic}/>
+          <ViewProfilePicComponent visible={viewProfilePic} onClose={()=>setViewProfilePic(false)}  userProfilePic={userProfilePic}/>
+          <About visible={showAbout} onClose={()=>setShowAbout(false)} setShowAbout={setShowAbout}/>
+
+       <Privacy visible={showPrivacy} onClose={()=>setShowPrivacy(false)} setShowPrivacy={setShowPrivacy}/> 
 
 
       </View>
@@ -196,9 +273,9 @@ const MyProfileScreen = () => {
         marginVertical:5
     },
     userDetailsHeading:{
-        fontSize:18,
+        fontSize:17,
         color:'#57636C',
-        fontWeight:'bold',
+        fontWeight:'500',
         flex:1
     },
     userDetailsInput:{
@@ -251,221 +328,13 @@ const MyProfileScreen = () => {
     // marginLeft: 'auto',
 
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.background,
+  },
+  loadingText: { color: "#fff", marginTop: 10, fontSize: 16 },
   });
   
   export default MyProfileScreen;
-
-
-
-// // MyProfileScreen.js
-// import React, { useState, useRef } from "react";
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   StyleSheet,
-//   TouchableOpacity,
-//   ScrollView,
-//   StatusBar,
-//   Image,
-//   KeyboardAvoidingView,
-//   Platform,
-//   Animated,
-//   Dimensions,
-// } from "react-native";
-// import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import { FontAwesome5 } from "@expo/vector-icons";
-// import { colors } from "@/constants/Colors";
-// import ChangePhotoComponent from "@/components/bravao/ChangePhotoComponent";
-// import About from "@/components/bravao/About";
-
-// const { height } = Dimensions.get("window");
-
-// const MyProfileScreen = () => {
-//   const [changeProfile, setChangeProfile] = useState(false);
-//   const [showAbout, setShowAbout] = useState(false);
-
-//   const slideAnim = useRef(new Animated.Value(height)).current;
-
-//   const openAboutSheet = () => {
-//     setShowAbout(true);
-//     Animated.timing(slideAnim, {
-//       toValue: height * 0.6,
-//       duration: 300,
-//       useNativeDriver: true,
-//     }).start();
-//   };
-
-//   const closeAboutSheet = () => {
-//     Animated.timing(slideAnim, {
-//       toValue: height,
-//       duration: 300,
-//       useNativeDriver: true,
-//     }).start(() => setShowAbout(false));
-//   };
-
-//   return (
-//     <KeyboardAvoidingView
-//       style={styles.container}
-//       behavior={Platform.OS === "ios" ? "padding" : "height"}
-//     >
-//       <View style={styles.container}>
-//         <StatusBar backgroundColor={colors.background} barStyle="light-content" />
-//         <View style={styles.header}>
-//           <Text style={styles.headerText}>My Profile</Text>
-//         </View>
-
-//         <View style={styles.myProfileContainer}>
-//           <ScrollView>
-//             <View style={styles.profileSection}>
-//               <View style={styles.profilePicWrapper}>
-//                 <Image source={require("../../assets/images/SigninImg.png")} style={styles.profilePic} />
-//                 <TouchableOpacity style={styles.profilePicEditIconContainer} onPress={() => setChangeProfile(true)}>
-//                   <FontAwesome5 name="pen" size={15} color="white" />
-//                 </TouchableOpacity>
-//               </View>
-//               <Text style={styles.userName}>Jaini Shah</Text>
-//             </View>
-//             <View style={styles.userDetailsContainer}>
-//               <View style={styles.userDetails}>
-//                 <Text style={styles.userDetailsHeading}>Email</Text>
-//                 <TextInput style={styles.userDetailsInput} value="janishah@gmail.com" />
-//               </View>
-//               <View style={styles.userDetails}>
-//                 <Text style={styles.userDetailsHeading}>Contact No</Text>
-//                 <TextInput style={styles.userDetailsInput} value="(406) 555-0120" />
-//               </View>
-//               <View style={styles.userDetails}>
-//                 <Text style={styles.userDetailsHeading}>Address</Text>
-//                 <TextInput style={styles.userDetailsInput} value="6391 Elgin St. Celina,..." />
-//               </View>
-//             </View>
-//             <View style={styles.menuContainer}>
-//               <TouchableOpacity style={styles.menuItem} onPress={openAboutSheet}>
-//                 <View style={styles.menuIconWrapper}>
-//                   <FontAwesome5 name="heart" size={24} color="#3C4E56" style={styles.menuIcon} />
-//                 </View>
-//                 <Text style={styles.menuText}>About Bravo</Text>
-//                 <FontAwesome name="chevron-right" size={24} color="#3C4E56" />
-//               </TouchableOpacity>
-//             </View>
-//           </ScrollView>
-//         </View>
-
-//         {changeProfile && <ChangePhotoComponent setChangeProfile={setChangeProfile} />}
-//         {showAbout && <About slideAnim={slideAnim} closeAboutSheet={closeAboutSheet} />}
-//       </View>
-//     </KeyboardAvoidingView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: colors.background,
-//   },
-//   header: {
-//     height: 250,
-//     backgroundColor: colors.background,
-//     paddingHorizontal: 20,
-//     justifyContent: "center",
-//   },
-//   headerText: {
-//     color: "#FFFFFF",
-//     fontSize: 28,
-//     fontWeight: "bold",
-//   },
-//   myProfileContainer: {
-//     flex: 3,
-//     backgroundColor: "#fff",
-//     borderTopLeftRadius: 30,
-//     borderTopRightRadius: 30,
-//     paddingHorizontal: 20,
-//     paddingVertical: 10,
-//   },
-//   profileSection: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     paddingVertical: 10,
-//   },
-//   profilePicWrapper: {
-//     width: 70,
-//     height: 70,
-//     borderRadius: 35,
-//     position: "relative",
-//   },
-//   profilePic: {
-//     width: "100%",
-//     height: "100%",
-//     borderRadius: 35,
-//   },
-//   profilePicEditIconContainer: {
-//     backgroundColor: "#ccc",
-//     width: 26,
-//     height: 26,
-//     borderRadius: 13,
-//     position: "absolute",
-//     right: 0,
-//     bottom: 0,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   userName: {
-//     fontSize: 24,
-//     marginLeft: 15,
-//     fontWeight: "bold",
-//   },
-//   userDetailsContainer: {
-//     marginTop: 5,
-//     borderWidth: 1,
-//     borderColor: "#ddd",
-//     borderRadius: 5,
-//     paddingVertical: 20,
-//     paddingHorizontal: 10,
-//   },
-//   userDetails: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     marginVertical: 5,
-//   },
-//   userDetailsHeading: {
-//     fontSize: 18,
-//     color: "#57636C",
-//     fontWeight: "bold",
-//     flex: 1,
-//   },
-//   userDetailsInput: {
-//     borderWidth: 1,
-//     borderColor: "#ddd",
-//     borderRadius: 8,
-//     flex: 1,
-//     paddingVertical: 8,
-//     paddingHorizontal: 5,
-//   },
-//   menuContainer: {
-//     borderWidth: 1,
-//     borderColor: "#ddd",
-//     borderRadius: 5,
-//     paddingTop: 20,
-//     paddingHorizontal: 10,
-//     marginTop: 20,
-//   },
-//   menuItem: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     backgroundColor: "#FFFFFF",
-//     paddingVertical: 15,
-//     borderRadius: 10,
-//     marginBottom: 15,
-//   },
-//   menuText: {
-//     fontSize: 16,
-//     fontWeight: "500",
-//     marginLeft: 15,
-//     color: "#000",
-//     flex: 1,
-//   },
-// });
-
-// export default MyProfileScreen;

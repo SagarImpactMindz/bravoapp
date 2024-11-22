@@ -1,50 +1,56 @@
-// import { Stack } from "expo-router";
+import React, { useEffect } from "react";
+import { Stack, useRouter } from "expo-router";
+import { AuthProvider, useAuth } from "@/app/contexts/AuthContext";
+import { UserProvider } from "./contexts/UserDetailsContext";
 
-// export default function RootLayout() {
-//   return (
-//     <Stack>
-//       <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
-//     </Stack>
-//   );
-// }
-// import { Stack } from "expo-router";
+function AuthScreens() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-// export default function RootLayout() {
-//   return (
-//     <Stack>
-//       <Stack.Screen name="index" options={{ headerShown: false }} />
-//       <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
-//       <Stack.Screen name="HomeGroupChatScreen" options={{ headerShown: false }} />
-//       <Stack.Screen name="NotificationScreen" options={{ headerShown: false }} />
-//       <Stack.Screen name="AddEventScreen" options={{ headerShown: false }} />
-//       <Stack.Screen name="ViewEventScreen" options={{ headerShown: false }} />
-      
-      
-//     </Stack>
-//   );
-// }
+  
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      router.replace("/");
+    }
+  }, [isAuthenticated]);
+
+  // if (isAuthenticated === undefined) {
+  //   return <SplashScreen />; 
+  // }
+
+  // const isAuthFunc=()=>{
+  //   if (isAuthenticated === false) {
+  //     router.replace("/");
+  //   }
+  // }
+  // useEffect(() => {
+  //   isAuthFunc()
+  // }, [isAuthenticated]);
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="ChatScreen" />
+      <Stack.Screen name="StudentsList" />
+      <Stack.Screen name="TeacherList" />
+      <Stack.Screen name="UserProfile" />
+      <Stack.Screen name="ViewEventScreen" />
+      <Stack.Screen name="EditEventScreen" />
+      <Stack.Screen name="GroupMembers" />
+      <Stack.Screen name="index" />
+    </Stack>
+  );
+}
 
 
-// main
-
-import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <Stack>
-      {/* Use the path to load your tabs after the login screen */}
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="LoginScreen" options={{ headerShown: false }} /> */}
-      {/* This will load the Tabs navigation when logged in */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="ChatScreen" options={{ headerShown: false }} />
-      <Stack.Screen name="StudentsList" options={{ headerShown: false }} />
-      <Stack.Screen name="TeacherList" options={{ headerShown: false }} />
-      <Stack.Screen name="UserProfile" options={{ headerShown: false }} />
-      <Stack.Screen name="ViewEventScreen" options={{ headerShown: false }} />
-      <Stack.Screen name="EditEventScreen" options={{ headerShown: false }} />
-      <Stack.Screen name="GroupMembers" options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>
+      <UserProvider>
+      <AuthScreens />
+      </UserProvider>
+    </AuthProvider>
   );
 }
 

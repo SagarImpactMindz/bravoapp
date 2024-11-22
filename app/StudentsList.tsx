@@ -92,9 +92,10 @@ const StudentList = () => {
           contentContainerStyle={styles.listContainer}
         />
       </View>
-      {changeProfile && (
+      {/* {changeProfile && (
         <ChangePhotoComponent setChangeProfile={setChangeProfile} />
-      )}
+      )} */}
+      <ChangePhotoComponent visible={changeProfile} onClose={()=>setChangeProfile(false)}   />
     </View>
   );
 };

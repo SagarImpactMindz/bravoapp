@@ -130,7 +130,7 @@ const About = ({ visible, onClose,setShowAbout }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-       <TouchableWithoutFeedback onPress={() => setShowAbout(false)}>
+       <TouchableWithoutFeedback onPress={() => onClose()}>
       <View style={styles.overlay}>
       <View
             style={styles.container}
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   content: {
     fontSize: 16,

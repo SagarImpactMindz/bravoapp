@@ -11,13 +11,13 @@ import DeleteComponent from '@/components/bravao/DeleteComponent';
 
 const CalendarScreen = () => {
   const navigation = useNavigation(); 
-  // const role="student"
-  const role="teacher"
   const[showEdit,setShowEdit]=useState(false)
   const[showDeletePopUp,setShowDeletePopUp]=useState(false)
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
+    // const role="student"
+  const role="teacher"
   const events = [
     {
       id: 1,

@@ -118,7 +118,7 @@ const Privacy = ({ visible, onClose,setShowPrivacy }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-    <TouchableWithoutFeedback onPress={() => setShowPrivacy(false)}>
+    <TouchableWithoutFeedback onPress={() => onClose()}>
       <View style={styles.overlay}>
         <View style={styles.container }
         onStartShouldSetResponder={(e) => e.stopPropagation()} >
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   content: {
     fontSize: 16,

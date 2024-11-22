@@ -2,40 +2,30 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image,StatusBar, TouchableOpacity, Dimensions } from 'react-native';
 import { colors } from '@/constants/Colors';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ChangePhotoComponent from '@/components/bravao/ChangePhotoComponent';
-const groupMembers = [
-  { id: '1', name: 'Adnan Safi', image:"" },
-  { id: '2', name: 'Joan Baker xcwegbuidcewb',  image:"" },
-  { id: '3', name: 'Ronald C. Kinch',image:""  },
-  { id: '4', name: 'Clara Tolson',image:""  },
-  { id: '5', name: 'Clara Tolson', image:"" },
-  { id: '6', name: 'Jennifer Fritz', image:""  },
-  { id: '7', name: 'Jennifer Fritz', image:""  },
-  { id: '8', name: 'Jennifer Fritz', image:""  },
-  { id: '9', name: 'Jennifer Fritz', image:""  },
-  { id: '10', name: 'Jennifer Fritz', image:""  },
-  { id: '11', name: 'Jennifer Fritz', image:""  },
-  { id: '12', name: 'Jennifer Fritz', image:""  },
-  { id: '13', name: 'Jennifer Fritz', image:""  },
-  { id: '14', name: 'Jennifer Fritz', image:""  },
-];
 
 const GroupMembers = () => {
   const [changeProfile,setChangeProfile]=useState(false)
   const navigation = useNavigation(); 
+  const route = useRoute();
+  const {groupId, group_picture,group_name,participants } = route.params;
 
+  const userProfilePic=group_picture
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={()=>navigation.navigate('UserProfile')}>
+    <TouchableOpacity onPress={()=>navigation.navigate('UserProfile',{ user: item,group_name:group_name})}>
         
     <View style={styles.notificationItem}>
-      <Image
-        // source={{ uri: 'https://placekitten.com/80/80' }}
-        source={require("../assets/images/SigninImg.png")}
+    <Image
+        source={
+          item?.profile_picture
+            ? { uri: item.profile_picture }
+            : require("../assets/images/placeholder-user.jpg")
+        }
         style={styles.avatar}
       />
       <View style={styles.textContainer}>
-        <Text style={styles.nameText}>{item.name}</Text>
+        <Text style={styles.nameText}>{item.first_name} {item.last_name}</Text>
       </View>
       <FontAwesome
                   name="chevron-right"
@@ -50,6 +40,7 @@ const GroupMembers = () => {
   );
 
   return (
+    
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <View style={styles.header}>
@@ -62,7 +53,7 @@ const GroupMembers = () => {
           </TouchableOpacity>
           <View style={styles.groupProfilePicWrapper}>
             <Image
-              source={require("../assets/images/SigninImg.png")}
+              source={{ uri: group_picture }}
               style={styles.groupProfilePic}
             />
             <TouchableOpacity
@@ -73,27 +64,27 @@ const GroupMembers = () => {
             </TouchableOpacity>
           </View>
           <View style={{ marginLeft: 8 }}>
-            <Text style={styles.groupName}>Class 10 A</Text>
+            <Text style={styles.groupName}>{group_name}</Text>
             <Text
               style={styles.groupMembers}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {groupMembers.map((member) => member.name).join(", ")}
+              {participants.map((member) => member.first_name).join(", ")}
             </Text>
           </View>
         </View>
       </View>
       <View style={styles.notificationContainer}>
         <FlatList
-          data={groupMembers}
+          data={participants}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.user_id.toString()}
           contentContainerStyle={styles.listContainer}
         />
       </View>
       {changeProfile && (
-        <ChangePhotoComponent setChangeProfile={setChangeProfile} />
+        <ChangePhotoComponent visible={changeProfile} onClose={()=>setChangeProfile(false)} userProfilePic={userProfilePic} />
       )}
     </View>
   );

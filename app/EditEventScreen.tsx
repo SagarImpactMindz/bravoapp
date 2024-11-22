@@ -20,7 +20,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import * as DocumentPicker from 'expo-document-picker';
 
 const EditEventScreen = () => {
-  const navigation=useNavigation()
   // const route = useRoute();
   // // console.log(route)
   // const { setShowEdit } = route.params;
@@ -46,6 +45,8 @@ const EditEventScreen = () => {
     "Designing",
     
   ]);
+  const navigation=useNavigation()
+
   // Sample group names (can be fetched from an API or database)
   const groups = ["Group A", "Group B", "Group C", "Group D"];
 

@@ -13,14 +13,26 @@ import {
 
 const { height } = Dimensions.get('window');
 
-const ChatInfoComponent = ({ visible, onClose }) => {
+const ChatInfoComponent = ({ visible, onClose,participants }) => {
+  console.log(participants)
   const navigation=useNavigation()
-  const handleOptionPress=(option)=>{
-    switch(option){
+  const handleOptionPress = (option) => {
+    switch (option) {
       case 'Contact info':
-        return navigation.navigate('UserProfile')
+        navigation.navigate('UserProfile');
+        break;
+      case 'Block':
+        // Handle blocking functionality here
+        break;
+      case 'Mute notification':
+        // Handle muting notifications here
+        break;
+      // Add other cases as needed
+      default:
+        break;
     }
-  }
+  };
+  
   return (
     <Modal
       animationType="slide"

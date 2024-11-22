@@ -17,9 +17,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from "@/constants/Colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
 const UserProfile = () => {
   const navigation = useNavigation(); 
+  const route = useRoute();
+  const { user,group_name } = route.params;
+
+
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -41,12 +46,26 @@ const UserProfile = () => {
                 <FontAwesome5 name="angle-left" size={30} color="#fff" />
               </TouchableOpacity>
               <View style={styles.profilePicWrapper}>
+                {/* <Image
+                  source={{
+                    uri: user.profile_picture
+                      ? user.profile_picture
+                      : "https://via.placeholder.com/150", 
+                  }}
+                  style={styles.profilePic}
+                /> */}
                 <Image
-                  source={require("../assets/images/SigninImg.png")}
+                  source={
+                    user.profile_picture
+                      ? { uri: user.profile_picture }
+                      : require("../assets/images/placeholder-user.jpg") // Local placeholder image
+                  }
                   style={styles.profilePic}
                 />
               </View>
-              <Text style={styles.userName}>Janni Shah</Text>
+              <Text style={styles.userName}>
+                {user.first_name} {user.last_name}
+              </Text>
             </View>
           </View>
 
@@ -60,49 +79,73 @@ const UserProfile = () => {
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Name</Text>
-                  <TextInput style={styles.userDetailsInput} value="Jani" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.first_name}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Surname</Text>
-                  <TextInput style={styles.userDetailsInput} value="Shah" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.last_name}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Email</Text>
                   <TextInput
                     style={styles.userDetailsInput}
-                    value="janishah@gmail.com"
+                    value={user.email}
                   />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Contact No</Text>
                   <TextInput
                     style={styles.userDetailsInput}
-                    value="1234567890"
+                    value={user.phone}
                   />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Group</Text>
-                  <TextInput style={styles.userDetailsInput} value="10th B" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={group_name}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Address</Text>
-                  <TextInput style={styles.userDetailsInput} value="home xyz" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.address}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>City</Text>
-                  <TextInput style={styles.userDetailsInput} value="LA" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.address}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Postal Code</Text>
-                  <TextInput style={styles.userDetailsInput} value="16002" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.postal_code}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>State</Text>
-                  <TextInput style={styles.userDetailsInput} value="Malburn" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.state}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Country</Text>
-                  <TextInput style={styles.userDetailsInput} value="USA" />
+                  <TextInput
+                    style={styles.userDetailsInput}
+                    value={user.country}
+                  />
                 </View>
                 <View style={styles.userDetails}>
                   <Text style={styles.userDetailsHeading}>Notes</Text>
@@ -204,7 +247,7 @@ const UserProfile = () => {
       profilePic: {
         width: "100%",
         height: "100%",
-        borderRadius: 35,
+        borderRadius: 30,
       },
       userName: {
         fontSize: 24,
@@ -242,9 +285,9 @@ const UserProfile = () => {
         marginVertical:5
     },
     userDetailsHeading:{
-        fontSize:18,
+        fontSize:17,
         color:'#57636C',
-        fontWeight:'bold',
+        fontWeight:'500',
         flex:1
     },
     userDetailsInput:{

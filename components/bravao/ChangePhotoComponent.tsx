@@ -11,11 +11,14 @@
 //   TouchableWithoutFeedback,
 // } from 'react-native';
 // import * as ImagePicker from 'expo-image-picker';
+// import { userProfileUpdate } from '@/utils/Services/services';
+
 
 // const { height } = Dimensions.get('window');
 
-// const ChangePhotoComponent = ({ visible, setChangeProfile }) => {
+// const ChangePhotoComponent = ({ visible, setChangeProfile,userProfilePic,updateProfilePic  }) => {
 //   const [selectedImage, setSelectedImage] = useState(null);
+
 
 //   const pickImage = async () => {
 //     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -27,20 +30,59 @@
 //     const result = await ImagePicker.launchImageLibraryAsync({
 //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
 //       allowsEditing: true,
-//       aspect: [1, 1],
+//       // aspect: [1, 1],
 //       quality: 1,
 //     });
-
-//     if (!result.cancelled) {
-//       setSelectedImage(result.uri);
+//     // console.log(result,"result")
+//     // console.log(result.assets[0].uri,"result")
+//     if (!result.assets[0].cancelled) {
+//       setSelectedImage(result.assets[0].uri);
 //     }
 //   };
 
-//   const saveChanges = () => {
-//     Alert.alert("Profile photo updated successfully!");
-//     setChangeProfile(false);
+  
+//   const saveChanges = async () => {
+//     if (!selectedImage) {
+//       Alert.alert("Please select an image to upload.");
+//       return;
+//     }
+  
+//     // Infer the MIME type from the file extension
+//     const getMimeType = (uri) => {
+//       const extension = uri.split(".").pop().toLowerCase(); // Extract file extension
+//       const mimeTypes = {
+//         jpg: "image/jpeg",
+//         jpeg: "image/jpeg",
+//         png: "image/png",
+//         gif: "image/gif",
+//         // bmp: "image/bmp",
+//         // webp: "image/webp",
+//       };
+//       return mimeTypes[extension] || "image/jpeg"; // Default to 'image/jpeg'
+//     };
+  
+//     const fileType = getMimeType(selectedImage);
+  
+//     const formData = new FormData();
+//     formData.append("profile_picture", {
+//       uri: selectedImage,
+//       type: fileType, // Use the inferred MIME type
+//       name: `profile_picture.${fileType.split("/")[1]}`, // Ensure the correct file extension
+//     });
+  
+//     try {
+//       const response = await userProfileUpdate(formData);
+//       console.log(response);
+//       Alert.alert(`${response.message}`);
+//       updateProfilePic(selectedImage);
+//       setChangeProfile(false);
+//     } catch (error) {
+//       // console.error("Error uploading profile picture:", error);
+//       // console.log(error.response.data.error)
+//       Alert.alert("Failed to update profile picture",error.response.data.error);
+//     }
 //   };
-
+  
 //   return (
 //     <Modal
 //       animationType="slide"
@@ -48,38 +90,42 @@
 //       visible={visible}
 //       onRequestClose={() => setChangeProfile(false)}
 //     >
-//     {/* <TouchableWithoutFeedback onPress={() => setChangeProfile(false)}> */}
-//       <View style={styles.overlay}>
-//         <View style={styles.container}>
-//           <View style={styles.titleContainer}>
-//             <Text style={styles.title}>Change Photo</Text>
-//             <Text style={styles.subtitle}>
-//               Upload a new photo below to change your avatar seen by others.
-//             </Text>
-//           </View>
+//       <TouchableWithoutFeedback onPress={() => setChangeProfile(false)}>
+//         {/* Apply the TouchableWithoutFeedback only to the overlay */}
+//         <View style={styles.overlay}>
+//           <View
+//             style={styles.container}
+//             onStartShouldSetResponder={(e) => e.stopPropagation()} // Prevent click propagation inside the modal content
+//           >
+//             <View style={styles.titleContainer}>
+//               <Text style={styles.title}>Change Photo</Text>
+//               <Text style={styles.subtitle}>
+//                 Upload a new photo below to change your avatar seen by others.
+//               </Text>
+//             </View>
 
-//           <View style={styles.avatarContainer}>
-//             <Image
-//               source={
-//                 selectedImage
-//                   ? { uri: selectedImage }
-//                   : { uri: 'https://via.placeholder.com/100' }
-//               }
-//               style={styles.avatar}
-//             />
-//           </View>
+//             <View style={styles.avatarContainer}>
+//               <Image
+//                 source={
+//                   selectedImage
+//                     ? { uri: selectedImage }
+//                     : { uri: userProfilePic }
+//                 }
+//                 style={styles.avatar}
+//               />
+//             </View>
 
-//           <View style={styles.buttonContainer}>
-//             <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-//               <Text style={styles.uploadButtonText}>Upload Image</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
-//               <Text style={styles.saveButtonText}>Save Changes</Text>
-//             </TouchableOpacity>
+//             <View style={styles.buttonContainer}>
+//               <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
+//                 <Text style={styles.uploadButtonText}>Upload Image</Text>
+//               </TouchableOpacity>
+//               <TouchableOpacity style={styles.saveButton} onPress={saveChanges}>
+//                 <Text style={styles.saveButtonText}>Save Changes</Text>
+//               </TouchableOpacity>
+//             </View>
 //           </View>
 //         </View>
-//       </View>
-//       {/* </TouchableWithoutFeedback> */}
+//       </TouchableWithoutFeedback>
 //     </Modal>
 //   );
 // };
@@ -106,13 +152,11 @@
 //     fontWeight: '500',
 //     marginBottom: 8,
 //     color: '#333',
-//     // textAlign: 'center',
 //   },
 //   subtitle: {
 //     fontSize: 14,
 //     fontWeight: '500',
 //     color: '#666',
-//     // textAlign: 'center',
 //   },
 //   avatarContainer: {
 //     justifyContent: 'center',
@@ -154,7 +198,6 @@
 
 // export default ChangePhotoComponent;
 
-
 import React, { useState } from 'react';
 import {
   View,
@@ -166,36 +209,74 @@ import {
   Modal,
   Dimensions,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { userProfileUpdate } from '@/utils/Services/services';
 
 const { height } = Dimensions.get('window');
 
-const ChangePhotoComponent = ({ visible, setChangeProfile }) => {
+const ChangePhotoComponent = ({ visible, onClose, userProfilePic, updateProfilePic }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      Alert.alert("Permission to access the media library is required!");
+      Alert.alert('Permission to access the media library is required!');
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setSelectedImage(result.uri);
+    if (!result.assets[0].cancelled) {
+      setSelectedImage(result.assets[0].uri);
     }
   };
 
-  const saveChanges = () => {
-    Alert.alert("Profile photo updated successfully!");
-    setChangeProfile(false);
+  const saveChanges = async () => {
+    if (!selectedImage) {
+      Alert.alert('Please select an image to upload.');
+      return;
+    }
+
+    const getMimeType = (uri) => {
+      const extension = uri.split('.').pop().toLowerCase();
+      const mimeTypes = {
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        gif: 'image/gif',
+      };
+      return mimeTypes[extension] || 'image/jpeg';
+    };
+
+    const fileType = getMimeType(selectedImage);
+
+    const formData = new FormData();
+    formData.append('profile_picture', {
+      uri: selectedImage,
+      type: fileType,
+      name: `profile_picture.${fileType.split('/')[1]}`,
+    });
+
+    try {
+      setIsLoading(true);
+      const response = await userProfileUpdate(formData);
+      if (response.isSuccess) {
+        Alert.alert(`${response.message}`);
+        updateProfilePic(selectedImage);
+        onClose();
+      }
+    } catch (error) {
+      Alert.alert('Failed to update profile picture', error.response?.data?.error || 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -203,14 +284,13 @@ const ChangePhotoComponent = ({ visible, setChangeProfile }) => {
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={() => setChangeProfile(false)}
+      onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={() => setChangeProfile(false)}>
-        {/* Apply the TouchableWithoutFeedback only to the overlay */}
+      <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           <View
             style={styles.container}
-            onStartShouldSetResponder={(e) => e.stopPropagation()} // Prevent click propagation inside the modal content
+            onStartShouldSetResponder={(e) => e.stopPropagation()}
           >
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Change Photo</Text>
@@ -220,13 +300,18 @@ const ChangePhotoComponent = ({ visible, setChangeProfile }) => {
             </View>
 
             <View style={styles.avatarContainer}>
+              {isLoading && (
+                <View style={styles.loadingOverlay}>
+                  <ActivityIndicator size="large" color="#fff" />
+                </View>
+              )}
               <Image
                 source={
                   selectedImage
                     ? { uri: selectedImage }
-                    : { uri: 'https://via.placeholder.com/100' }
+                    : { uri: userProfilePic }
                 }
-                style={styles.avatar}
+                style={[styles.avatar, isLoading && styles.avatarBlur]}
               />
             </View>
 
@@ -277,6 +362,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    position: 'relative',
   },
   avatar: {
     width: 100,
@@ -284,6 +370,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 3,
     borderColor: '#ddd',
+  },
+  avatarBlur: {
+    opacity: 0.5,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 50,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -312,5 +410,3 @@ const styles = StyleSheet.create({
 });
 
 export default ChangePhotoComponent;
-
-

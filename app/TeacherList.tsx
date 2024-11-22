@@ -90,8 +90,11 @@ const TeacherList = () => {
         contentContainerStyle={styles.listContainer}
       />
       </View>
-      {changeProfile && <ChangePhotoComponent setChangeProfile={setChangeProfile}/>}
-      {showTeacherInfo && <TeacherInfoComponent  visible={showTeacherInfo} onClose={() => setShowTeacherInfo(false)}/>}
+      {/* {changeProfile && <ChangePhotoComponent setChangeProfile={setChangeProfile}/>} */}
+      {/* {showTeacherInfo && <TeacherInfoComponent  visible={showTeacherInfo} onClose={() => setShowTeacherInfo(false)}/>} */}
+      <ChangePhotoComponent visible={changeProfile} onClose={()=>setChangeProfile(false)}   />
+      <TeacherInfoComponent  visible={showTeacherInfo} onClose={() => setShowTeacherInfo(false)}/>
+        
     </View>
   );
 };
