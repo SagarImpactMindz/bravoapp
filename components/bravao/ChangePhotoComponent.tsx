@@ -213,12 +213,14 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { userProfileUpdate } from '@/utils/Services/services';
+import { useRouter } from 'expo-router';
 
 const { height } = Dimensions.get('window');
 
 const ChangePhotoComponent = ({ visible, onClose, userProfilePic, updateProfilePic }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router=useRouter()
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -274,6 +276,10 @@ const ChangePhotoComponent = ({ visible, onClose, userProfilePic, updateProfileP
       }
     } catch (error) {
       Alert.alert('Failed to update profile picture', error.response?.data?.error || 'An error occurred');
+      if (error.response && error.response.status === 401) {
+        // Token expired, navigate to login screen
+        router.replace('/');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -340,7 +346,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 20,
+    // borderRadius: 20,
+    borderTopRightRadius:20,
+    borderTopLeftRadius:20,
     padding: 20,
     maxHeight: height * 0.7,
   },

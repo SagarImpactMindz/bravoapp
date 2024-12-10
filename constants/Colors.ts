@@ -46,4 +46,19 @@ const tintColorDark = '#fff';
 
 export const colors={
     background:'#343745',
+    contentBackground:'#fff'
+}
+export const tabsColors={
+    tabIconColor:'gray',
+    tabActiveColor:'white'
+}
+export const loginConst={
+    background:'#343745',
+    contentBackground:'#fff',
+    buttonBackground:'#7BA7A7',
+    buttonText:'#fff',
+    buttonIconColor:'#fff'
+
+
+
 }

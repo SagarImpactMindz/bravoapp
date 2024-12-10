@@ -9,25 +9,41 @@ import {
   Dimensions,
   ScrollView,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 
 const { height } = Dimensions.get('window');
 
 const ChatInfoComponent = ({ visible, onClose,participants }) => {
   console.log(participants)
+  const group=true
   const navigation=useNavigation()
   const handleOptionPress = (option) => {
     switch (option) {
-      case 'Contact info':
-        navigation.navigate('UserProfile');
+      case "Contact info":
+        // navigation.navigate('UserProfile');
+        Alert.alert("contact info");
         break;
-      case 'Block':
+      case "Block":
         // Handle blocking functionality here
+        Alert.alert("Block");
         break;
-      case 'Mute notification':
+      case "Mute notification":
+        Alert.alert("Mute notification");
         // Handle muting notifications here
         break;
-      // Add other cases as needed
+      case "Clear chat":
+        Alert.alert("Clear chat");
+        break;
+      case "Report":
+        Alert.alert("Report");
+        break;
+      case "Close chat":
+        Alert.alert("Close chat");
+        break;
+      case "Delete chat":
+        Alert.alert("Delete chat");
+        break;
       default:
         break;
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { colors } from '@/constants/Colors';
+import { colors, tabsColors } from '@/constants/Colors';
 import {  View } from 'react-native';
 
 export default function TabLayout() {
@@ -10,7 +10,8 @@ export default function TabLayout() {
     <Tabs
       initialRouteName="HomeGroupChatScreen" // Set the default active tab
       screenOptions={{
-        tabBarActiveTintColor: 'white',
+        tabBarActiveTintColor: tabsColors.tabActiveColor,
+        tabBarInactiveTintColor: tabsColors.tabIconColor,
         tabBarStyle: {
           backgroundColor: colors.background,
           height: 70,

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import { AuthProvider, useAuth } from "@/app/contexts/AuthContext";
-import { UserProvider } from "./contexts/UserDetailsContext";
 
 function AuthScreens() {
   const { isAuthenticated } = useAuth();
@@ -14,18 +13,6 @@ function AuthScreens() {
     }
   }, [isAuthenticated]);
 
-  // if (isAuthenticated === undefined) {
-  //   return <SplashScreen />; 
-  // }
-
-  // const isAuthFunc=()=>{
-  //   if (isAuthenticated === false) {
-  //     router.replace("/");
-  //   }
-  // }
-  // useEffect(() => {
-  //   isAuthFunc()
-  // }, [isAuthenticated]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -47,9 +34,7 @@ function AuthScreens() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <UserProvider>
       <AuthScreens />
-      </UserProvider>
     </AuthProvider>
   );
 }

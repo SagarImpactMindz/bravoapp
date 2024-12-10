@@ -8,7 +8,7 @@ export const loginApi = async (payload) => {
     // console.log(response,"res")
     return response.data;
   } catch (error) {
-    // console.error('Login API Error:', error);
+    console.error('Login API Error:', error);
     // console.log(error.response.data.message)
     throw error;
   }
@@ -43,6 +43,25 @@ export const groupMembersApi=async(payload)=>{
   }
 }
 
+export const allUsersApi=async()=>{
+  try {
+    const response = await axiosInstance.get(`/AllUsers`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+} 
+
+// user by id 
+export const getUserInfoByIdApi=async(payload)=>{
+  try {
+    const response = await axiosInstance.get(`/GetUserByID/${payload}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+}
+
 
 // update userProfile api use in MyProfileScreen.tsx
 
@@ -62,3 +81,14 @@ export const userProfileUpdate = async (payload) => {
     throw error;
   }
 };
+
+
+// About and privacy
+export const getAboutPrivacy=async()=>{
+  try {
+    const response = await axiosInstance.get(`/privacy_about`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+}

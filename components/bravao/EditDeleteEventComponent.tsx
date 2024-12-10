@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const { height } = Dimensions.get('window');
 
-const EditDeleteEventComponent = ({ visible, setShowEdit,setShowDeletePopUp }) => {
+const EditDeleteEventComponent = ({ visible, setShowEdit,setShowDeletePopUp,itemToEdit,itemToEditId }) => {
  const navigation=useNavigation()
 
   return (
@@ -33,8 +33,8 @@ const EditDeleteEventComponent = ({ visible, setShowEdit,setShowDeletePopUp }) =
             style={styles.container}
             onStartShouldSetResponder={(e) => e.stopPropagation()} // Prevent click propagation inside the modal content
           >
-              <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('EditEventScreen'),setShowEdit(false)}}> 
-              {/* <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('EditEventScreen',{ setShowEdit })}}> */}
+              <TouchableOpacity style={styles.button} onPress={()=>{setShowEdit(false); navigation.navigate('EditEventScreen',{itemToEdit:itemToEdit,itemToEditId:itemToEditId})}}> 
+             {/* <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('EditEventScreen',{ setShowEdit })}}> */}
               <FontAwesome5 name="pen" size={14} color="black" />
                 <Text style={styles.buttonText}>Edit</Text>
               </TouchableOpacity>
@@ -68,7 +68,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 20,
+    // borderRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     padding: 20,
     maxHeight: height * 0.7,
   },

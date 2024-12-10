@@ -12,16 +12,43 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
+import { deleteEventByIdApi } from '@/utils/Services/eventServices';
+import { useRouter } from 'expo-router';
 
 const { height } = Dimensions.get('window');
 
-const DeleteComponent = ({ visible, setShowDeletePopUp }) => {
+const DeleteComponent = ({ visible, setShowDeletePopUp,itemToEditId,onDeleteSuccess }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const router=useRouter()
+  // console.log(itemToEditId,"itemToEditId")
+  const event_id=itemToEditId
 
+  const handleDelete = async() => {
 
-  const handleDelete = () => {
-    Alert.alert("Delete event successfully!");
-    setShowDeletePopUp(false);
+    try {
+      const response=await deleteEventByIdApi(event_id)
+      if(response.isSuccess){
+        Alert.alert(response?.message)
+        setShowDeletePopUp(false);
+        // console.log(response,"delete respo")
+        if (onDeleteSuccess) {
+          onDeleteSuccess(); // Trigger the refresh function in the parent
+        }
+      }else{
+        // Alert.alert("Delete event successfully!");
+        // console.log(response)
+        Alert.alert(response?.message)
+        setShowDeletePopUp(false);
+      }
+
+    } catch (error) {
+      console.log(error)
+      if (error.response && error.response.status === 401) {
+        // Token expired, navigate to login screen
+        router.replace('/');
+      }
+      Alert.alert(error?.response?.message)
+    }
   };
 
   return (
@@ -74,7 +101,8 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     paddingBottom:40,
     maxHeight: height * 0.7,
   },

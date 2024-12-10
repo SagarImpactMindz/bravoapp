@@ -26,8 +26,9 @@ import About from "@/components/bravao/About";
 import Privacy from "@/components/bravao/Privacy";
 import { useAuth } from "@/app/contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { usersDetails } from "@/utils/Services/services";
+import { getAboutPrivacy, usersDetails } from "@/utils/Services/services";
 import ViewProfilePicComponent from "@/components/bravao/ViewProfilePicComponent"
+import { useRouter } from "expo-router";
 
 const MyProfileScreen = () => {
   const [changeProfile,setChangeProfile]=useState(false)
@@ -36,13 +37,17 @@ const MyProfileScreen = () => {
   const[userData,setUserData]=useState()
   const[isLoading,setIsLoading]=useState(false)
   const[viewProfilePic,setViewProfilePic]=useState(false)
+  const[aboutPageContent,setAboutPageContent]=useState()
+  const[privacyPageContent,setPrivacyPageContent]=useState()
   const { logoutUser,setIsAuthenticated } = useAuth();
-  
+  const router=useRouter()
   const handleLogout = () => {
     logoutUser();
     setIsAuthenticated(false) 
     Alert.alert("Logout Successfully");
   };
+
+
 // get data from api
 useEffect(() => {
   (async () => {
@@ -52,28 +57,20 @@ useEffect(() => {
       setUserData(data?.userInfo);
     } catch (error) {
       // console.error(error);
-      Alert.alert("Login Failed", error.response.data.message);
+      Alert.alert("Something wents wrong", error.response.data.message);
+      if (error.response && error.response.status === 401) {
+        // Token expired, navigate to login screen
+        router.replace('/');
+      }
     } finally {
       setIsLoading(false);
     }
   })();
+  
 }, []);
 
-// const fetchUserData=async()=>{
-//   setIsLoading(true);
-//   try {
-//     const data = await usersDetails();
-//     setUserData(data?.userInfo);
-//   } catch (error) {
-//     // console.error(error);
-//     Alert.alert("Login Failed", error.response.data.message);
-//   } finally {
-//     setIsLoading(false);
-//   }
-// }
-// useEffect(()=>{
-//   fetchUserData()
-// },[])
+
+
 
 const updateProfilePic = (newProfilePic) => {
   setUserData((prevUserData) => ({
@@ -83,16 +80,34 @@ const updateProfilePic = (newProfilePic) => {
 };
 
 
-if (isLoading) {
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={"#fff"} />
-      <Text style={styles.loadingText}>Loading...</Text>
-    </View>
-  );
-}
 
 const userProfilePic=userData?.profile_picture
+
+const getAboutPrivacyData = async () => {
+  setIsLoading(true);
+  try {
+    const response = await getAboutPrivacy();
+    if(response?.data){
+      setAboutPageContent(response?.data[0]?.page_content)
+      setPrivacyPageContent(response?.data[1]?.page_content)
+    }
+  } catch (error) {
+    // console.error(error);
+    Alert.alert("Something went wrong", error.response?.data?.message || "An error occurred");
+    if (error.response && error.response.status === 401) {
+      // Token expired, navigate to login screen
+      router.replace('/');
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+useEffect(() => {
+  getAboutPrivacyData();
+}, []);
+
+// console.log(privacyPageContent)
 
     return (
       <KeyboardAvoidingView
@@ -111,6 +126,11 @@ const userProfilePic=userData?.profile_picture
 
         <View style={styles.myProfileContainer}>
         <ScrollView >
+        {isLoading ? (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size={'large'} color={'black'} />
+            </View>):(
+              <>
           <View style={styles.profileSection}>
             <TouchableOpacity style={styles.profilePicWrapper} onPress={()=>setViewProfilePic(true)}>
               <Image
@@ -174,19 +194,16 @@ const userProfilePic=userData?.profile_picture
           <Text style={styles.subText}>Further secure your account for safety</Text></View>
         </TouchableOpacity>
           </View>
+          </>)}
           </ScrollView>
           </View>
        
-          {/* {changeProfile &&   <ChangePhotoComponent visible={changeProfile} setChangeProfile={setChangeProfile} userProfilePic={userProfilePic} updateProfilePic={updateProfilePic} setViewProfilePic={setViewProfilePic}/>}
-          {viewProfilePic && <ViewProfilePicComponent visible={viewProfilePic} setViewProfilePic={setViewProfilePic} userProfilePic={userProfilePic}/>}
-          {showAbout && <About setShowAbout={setShowAbout}/>}
-
-          {showPrivacy && <Privacy setShowPrivacy={setShowPrivacy}/> } */}
+ 
           <ChangePhotoComponent visible={changeProfile} onClose={()=>setChangeProfile(false)}  userProfilePic={userProfilePic} updateProfilePic={updateProfilePic} setViewProfilePic={setViewProfilePic}/>
           <ViewProfilePicComponent visible={viewProfilePic} onClose={()=>setViewProfilePic(false)}  userProfilePic={userProfilePic}/>
-          <About visible={showAbout} onClose={()=>setShowAbout(false)} setShowAbout={setShowAbout}/>
+          <About visible={showAbout} onClose={()=>setShowAbout(false)} setShowAbout={setShowAbout} aboutPageContent={aboutPageContent}/>
 
-       <Privacy visible={showPrivacy} onClose={()=>setShowPrivacy(false)} setShowPrivacy={setShowPrivacy}/> 
+        <Privacy visible={showPrivacy} onClose={()=>setShowPrivacy(false)} setShowPrivacy={setShowPrivacy} privacyPageContent={privacyPageContent}/> 
 
 
       </View>
